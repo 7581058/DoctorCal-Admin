@@ -1,27 +1,25 @@
-# React + TypeScript + Vite
+# MINI Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Commit Message
 
-Currently, two official plugins are available:
+- Emoji + Tag Name + Description
+- 이모지 뒤에 띄어쓰기 추가, Tag Name과 콜론 붙여쓰기, 콜론 뒤에 띄어쓰기 추가
+- 예시 `✨ Feat: 로그인 기능 추가`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<br />
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+| Tag Name | Emoji | Description |
+| --- | --- | --- |
+| Feat | ✨ :sparkles: | 새로운 기능을 추가 |
+| Fix | 🐛 :bug: | 버그 수정 |
+| Design | 💄 :lipstick: | CSS 등 사용자 UI 디자인 변경 |
+| !BREAKING CHANGE | 🚨 :policecarlight: | 커다란 API 변경의 경우 |
+| !HOTFIX | 🚨 :policecarlight: | 급하게 치명적인 버그를 고쳐야하는 경우 |
+| Style | ⚙️ :gear: | 코드 포맷 변경, 세미 콜론 누락, 코드 수정이 없는 경우 |
+| Refactor | 🔨 :hammer: | 프로덕션 코드 리팩토링 |
+| Comment | 💡 :bulb: | 필요한 주석 추가 및 변경 |
+| Docs | 📚 :books: | 문서 수정 |
+| Test | 🗒️ :memo: | 테스트 코드, 리펙토링 테스트 코드 추가, Production Code(실제로 사용하는 코드) 변경 없음 |
+| Chore | ⚙️ :gear: | 빌드 업무 수정, 패키지 매니저 수정, 패키지 관리자 구성 등 업데이트, Production Code 변경 없음 |
+| Rename | 💡 :bulb: | 파일 혹은 폴더명을 수정하거나 옮기는 작업만인 경우 |
+| Remove | 💡 :bulb: | 파일을 삭제하는 작업만 수행한 경우 |

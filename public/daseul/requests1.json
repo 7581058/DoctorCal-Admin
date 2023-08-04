@@ -1,0 +1,106 @@
+{
+  "success": true,
+  "item": [
+    {
+      "id": 1,
+      "username": "한유진",
+      "phone": "01011111111",
+      "hospitalName": "연세 세브란스 병원",
+      "deptName": "응급의학과",
+      "level": "INTERN",
+      "auth": "USER",
+      "status": "NOTAPPROVED"
+    },
+    {
+      "id": 2,
+      "username": "이원우",
+      "phone": "01022222222",
+      "hospitalName": "연세 세브란스 병원",
+      "deptName": "응급의학과",
+      "level": "RESIDENT",
+      "auth": "USER",
+      "status": "NOTAPPROVED"
+    },
+    {
+      "id": 3,
+      "username": "장준수",
+      "phone": "01033333333",
+      "hospitalName": "연세 세브란스 병원",
+      "deptName": "영상의학과",
+      "level": "FELLOW",
+      "auth": "USER",
+      "status": "NOTAPPROVED"
+    },
+    {
+      "id": 4,
+      "username": "박철수",
+      "phone": "01044444444",
+      "hospitalName": "연세 세브란스 병원",
+      "deptName": "신경과",
+      "level": "FELLOW",
+      "auth": "USER",
+      "status": "NOTAPPROVED"
+    },
+    {
+      "id": 5,
+      "username": "김규빈",
+      "phone": "01044444444",
+      "hospitalName": "연세 세브란스 병원",
+      "deptName": "정신건강의학과",
+      "level": "RESIDENT",
+      "auth": "USER",
+      "status": "NOTAPPROVED"
+    },
+    {
+      "id": 6,
+      "username": "이찬",
+      "phone": "01044444444",
+      "hospitalName": "연세 세브란스 병원",
+      "deptName": "영상의학과",
+      "level": "RESIDENT",
+      "auth": "USER",
+      "status": "NOTAPPROVED"
+    },
+    {
+      "id": 7,
+      "username": "이준호",
+      "phone": "01044444444",
+      "hospitalName": "연세 세브란스 병원",
+      "deptName": "내과",
+      "level": "FELLOW",
+      "auth": "USER",
+      "status": "NOTAPPROVED"
+    },
+    {
+      "id": 8,
+      "username": "장세용",
+      "phone": "01044444444",
+      "hospitalName": "연세 세브란스 병원",
+      "deptName": "성형외과",
+      "level": "INTERN",
+      "auth": "USER",
+      "status": "NOTAPPROVED"
+    },
+    {
+      "id": 9,
+      "username": "최한결",
+      "phone": "01044444444",
+      "hospitalName": "연세 세브란스 병원",
+      "deptName": "피부과",
+      "level": "FELLOW",
+      "auth": "USER",
+      "status": "NOTAPPROVED"
+    },
+    {
+      "id": 10,
+      "username": "동새벽",
+      "phone": "01044444444",
+      "hospitalName": "연세 세브란스 병원",
+      "deptName": "정신건강의학과",
+      "level": "INTERN",
+      "auth": "USER",
+      "status": "NOTAPPROVED"
+    }
+  ],
+  "error": null
+}

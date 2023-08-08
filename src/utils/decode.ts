@@ -125,3 +125,8 @@ export const getPhone = (phone: string) => {
   if (part === null) return phone;
   return `${part[1]}-${part[2]}-${part[3]}`;
 };
+
+export const getAuth = (auth: string) => {
+  if (auth === 'ADMIN') return '관리자';
+  else if (auth === 'USER') return '일반';
+};

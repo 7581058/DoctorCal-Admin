@@ -140,3 +140,15 @@ export interface Request {
   auth: string;
   status: string;
 }
+
+// 관리자 사용자 리스트
+export interface Users {
+  auth: string;
+  deptName: string;
+  hospitalName: string;
+  id: number;
+  level: string;
+  phone: string;
+  status: string;
+  username: string;
+}

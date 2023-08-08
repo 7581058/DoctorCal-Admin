@@ -28,13 +28,27 @@ export const login = async (body: LoginBody) => {
   }
 };
 
-//로그아웃
+// 로그아웃
 export const logout = async () => {
   try {
     const res = await instance.post('/user/logout');
     return res.data;
   } catch (error) {
     console.log('로그아웃 실패');
+  }
+};
+
+// 마이페이지
+export const getMyPage = async () => {
+  try {
+    const res = await instance.get('/user/myPage', {
+      headers: {
+        Authorization: `${localStorage.getItem('authToken')}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.log('마이페이지 조회 실패', error);
   }
 };
 

@@ -142,6 +142,17 @@ export interface Request {
   status: string;
 }
 
+// 관리자 당직변경관리 리스트
+export interface DutyRequest {
+  category: string;
+  createdAt: string;
+  evaluation: string;
+  level: string;
+  scheduleId: number;
+  startDate: string;
+  username: string;
+}
+
 // 관리자 사용자 리스트
 export interface Users {
   auth: string;

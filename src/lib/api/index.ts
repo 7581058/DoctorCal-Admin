@@ -28,8 +28,18 @@ export const login = async (body: LoginBody) => {
   }
 };
 
+//로그아웃
+export const logout = async () => {
+  try {
+    const res = await instance.post('/user/logout');
+    return res.data;
+  } catch (error) {
+    console.log('로그아웃 실패');
+  }
+};
+
 // 사용자 관리
-export const users = async (body: Pages) => {
+export const users = async (body: PagesBody) => {
   try {
     const res = await authInstance.get('admin/users', { params: body });
     return res.data;
@@ -39,7 +49,7 @@ export const users = async (body: Pages) => {
 };
 
 // 회원가입 요청 리스트
-export const register = async (body: Pages) => {
+export const register = async (body: PagesBody) => {
   try {
     const res = await authInstance.get('admin/register', { params: body });
     return res.data;
@@ -69,7 +79,7 @@ export const userRetire = async (id: number) => {
 };
 
 // 연차 결재 관리
-export const annual = async (body: Pages) => {
+export const annual = async (body: PagesBody) => {
   try {
     const res = await authInstance.get('admin/annual', { params: body });
     return res.data;
@@ -79,7 +89,7 @@ export const annual = async (body: Pages) => {
 };
 
 // 당직 결재 관리
-export const duty = async (body: Pages) => {
+export const duty = async (body: PagesBody) => {
   try {
     const res = await authInstance.get('admin/duty', { params: body });
     return res.data;

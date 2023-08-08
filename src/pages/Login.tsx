@@ -47,7 +47,7 @@ const Login = () => {
           const token = response.headers.authorization;
           saveTokenToLocalstorage(token);
           setIsLoggedIn(true);
-          navigate('/users');
+          navigate('/duty');
         } else {
           setLoginError('로그인에 실패하셨습니다.');
           console.error('로그인 실패');

@@ -1,18 +1,20 @@
 import { BsPersonFillGear, BsCalendarPlus, BsCalendarWeek, BsFillPersonPlusFill } from 'react-icons/bs';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
+import { logout } from '@/lib/api';
 
 const SideBar = () => {
   const navigate = useNavigate();
 
-  const handleClickLogout = () => {
-    //토큰 삭제 로직 추가 필요
+  const handleClickLogout = async () => {
+    await logout();
+    localStorage.removeItem('authToken');
     navigate('/');
   };
 
   return (
     <Container>
-      <Logo>Dr.Cal </Logo>
+      <Logo />
       <Menu>
         <MenuItem to="/duty">
           <BsCalendarWeek />
@@ -54,10 +56,13 @@ const Container = styled.div`
 `;
 
 const Logo = styled.span`
-  margin-top: 40px;
-  font-size: 2rem;
-  font-weight: 700;
-  color: ${props => props.theme.primary};
+  margin-top: 60px;
+  background-image: url('src/assets/logo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 160px;
+  height: 35px;
+  background-position: center;
 `;
 
 const Menu = styled.div`

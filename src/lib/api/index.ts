@@ -89,6 +89,7 @@ export const userRetire = async (id: number) => {
     return res.data;
   } catch (error) {
     console.log('사용자 재직 상태 변경 실패', error);
+    return error;
   }
 };
 

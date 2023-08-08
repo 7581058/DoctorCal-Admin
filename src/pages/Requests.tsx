@@ -2,8 +2,8 @@ import BoardContainer from '@/components/BoardContainer';
 import RequestsItem from '@/components/requests/RequestsItem';
 import Pagenation from '@/components/Pagenation';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { styled } from 'styled-components';
+import { register } from '@/lib/api';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -15,49 +15,44 @@ const header = [
 ];
 
 const Requests = () => {
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태 관리
+  const [currentPage, setCurrentPage] = useState(1);
+  const [requests, setRequests] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const getList = async (page: number) => {
+    const data = await register({ page: page });
+    setRequests(data.item);
+    setTotalPages(data.totalPages);
+  };
+
+  useEffect(() => {
+    getList(0);
+  }, []);
 
   const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-    getList(pageNumber);
-  };
-
-  const [requests, setRequests] = useState([]);
-  const [allLength, setallLength] = useState(0);
-
-  const getLength = async () => {
-    try {
-      const data = await axios.get('http://127.0.0.1:5173/daseul/requests.json');
-      setallLength(data.data.item[0].total);
-      return data;
-    } catch (error) {
-      console.warn(error);
-      console.warn('fail');
-      return false;
+    if (pageNumber === 0) {
+      getList(pageNumber);
+      setCurrentPage(pageNumber);
+    } else {
+      setCurrentPage(pageNumber);
+      getList(pageNumber - 1);
     }
   };
-  const getList = async (page: number) => {
-    try {
-      const data = await axios.get(`http://127.0.0.1:5173/daseul/requests${page - 1}.json`);
-      setRequests(data.data.item);
-      return data;
-    } catch (error) {
-      console.warn(error);
-      console.warn('fail');
-      return false;
-    }
-  };
-  useEffect(() => {
-    getLength();
-    getList(1);
-  }, []);
 
   return (
     <Container>
       <BoardContainer title="회원 가입 요청" headers={header}>
-        <RequestsItem requests={requests} currentPage={currentPage} />
+        {requests.length > 0 ? (
+          <RequestsItem requests={requests} currentPage={currentPage} />
+        ) : (
+          <Empty>요청 목록이 존재하지 않습니다.</Empty>
+        )}
       </BoardContainer>
-      <Pagenation totalItems={allLength} currentPage={currentPage} onPageChange={handlePageChange} />
+      {requests.length > 0 ? (
+        <Pagenation totalPage={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
+      ) : (
+        <EmptyBottom />
+      )}
     </Container>
   );
 };
@@ -72,4 +67,20 @@ const Container = styled.div`
   height: 100%;
   padding: 20px 30px;
   box-sizing: border-box;
+`;
+
+const Empty = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.125rem;
+  color: ${props => props.theme.primary};
+  font-weight: 500;
+`;
+
+const EmptyBottom = styled.div`
+  width: 100%;
+  height: 20px;
 `;

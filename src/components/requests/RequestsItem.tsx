@@ -1,19 +1,18 @@
 import { styled } from 'styled-components';
-
-interface Request {
-  id: number;
-  username: string;
-  phone: string;
-  hospitalName: string;
-  deptName: string;
-  level: string;
-  auth: string;
-  status: string;
-}
+import { registerApprove } from '@/lib/api';
+import { getLevel } from '@/utils/decode';
+import { Request } from '@/lib/types';
 
 const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentPage: number }) => {
-  const handleClickApprove = (id: number) => {
+  const approve = async (userid: number) => {
+    await registerApprove(userid);
+  };
+
+  const handleClickApprove = (name: string, dept: string, id: number) => {
     console.log(id);
+    approve(id);
+    alert(`${dept} ${name} 가입 승인 완료`);
+    window.location.reload();
   };
 
   const startIndex = (currentPage - 1) * 10;
@@ -25,10 +24,12 @@ const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentP
           <span className="index">{startIndex + index + 1}</span>
           <span className="name">{item.username}</span>
           <span className="dept">{item.deptName}</span>
-          <span className="level">{item.level}</span>
+          <span className="level">{getLevel(item.level)}</span>
           <span className="phone">{item.phone}</span>
           <span className="button">
-            <ApproveButton onClick={() => handleClickApprove(item.id)}>승인</ApproveButton>
+            <ApproveButton onClick={() => handleClickApprove(item.username, item.deptName, item.id)}>
+              승인
+            </ApproveButton>
           </span>
         </RequestItem>
       ))}

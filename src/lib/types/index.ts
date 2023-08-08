@@ -128,3 +128,15 @@ export interface Eveluation {
 export interface DeptList {
   hospitalId: number;
 }
+
+// 관리자 회원가입요청 리스트
+export interface Request {
+  id: number;
+  username: string;
+  phone: string;
+  hospitalName: string;
+  deptName: string;
+  level: string;
+  auth: string;
+  status: string;
+}

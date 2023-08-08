@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Btn from '@/components/Buttons/Btn';
 import SignUpValidation from '@/lib/Validation/validation';
@@ -94,12 +94,6 @@ const Login = () => {
             <Btn content={'로그인'} />
           </InputContainer>
         </FormWrap>
-        {/* <div>
-          <span>아직 계정이 없으신가요? </span>
-          <Link to="/signup" className="linkto">
-            회원가입
-          </Link>
-        </div> */}
       </Wrap>
     </Container>
   );

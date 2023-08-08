@@ -1,12 +1,12 @@
 import { styled } from 'styled-components';
 
 interface PagenationProps {
-  totalItems: number;
+  totalPage: number;
   currentPage: number;
   onPageChange: (pageNumber: number) => void;
 }
 
-const Pagenation: React.FC<PagenationProps> = ({ totalItems, currentPage, onPageChange }) => {
+const Pagenation: React.FC<PagenationProps> = ({ totalPage, currentPage, onPageChange }) => {
   const handleClickPage = (pageNumber: number) => {
     onPageChange(pageNumber);
   };
@@ -18,14 +18,14 @@ const Pagenation: React.FC<PagenationProps> = ({ totalItems, currentPage, onPage
   };
 
   const goToNextPage = () => {
-    if (currentPage < totalItems) {
+    if (currentPage < totalPage) {
       handleClickPage(currentPage + 1);
     }
   };
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    for (let i = 1; i <= totalItems; i++) {
+    for (let i = 1; i <= totalPage; i++) {
       pageNumbers.push(
         <PageNumber key={i} onClick={() => handleClickPage(i)} className={currentPage === i ? 'active' : ''}>
           {i}
@@ -41,7 +41,7 @@ const Pagenation: React.FC<PagenationProps> = ({ totalItems, currentPage, onPage
         &lt;
       </button>
       {renderPageNumbers()}
-      <button onClick={goToNextPage} disabled={currentPage === totalItems}>
+      <button onClick={goToNextPage} disabled={currentPage === totalPage}>
         &gt;
       </button>
     </Container>
@@ -60,9 +60,11 @@ const Container = styled.div`
   button {
     border: none;
     outline: none;
-    background-color: transparent;
     font-size: 1.125rem;
     color: ${props => props.theme.primary};
+    &:disabled {
+      color: ${props => props.theme.lightGray};
+    }
   }
 `;
 

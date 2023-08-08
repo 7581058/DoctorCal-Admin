@@ -1,4 +1,4 @@
-import { Eveluation, Login, Pages } from '@/lib/types/index.ts';
+import { Eveluation, LoginBody, PagesBody } from '@/lib/types/index.ts';
 import axios from 'axios';
 
 // register({ page: 0 }).then(a => console.log(a.item)) 사용
@@ -19,7 +19,7 @@ const authInstance = axios.create({
 });
 
 // 로그인
-export const login = async (body: Login) => {
+export const login = async (body: LoginBody) => {
   try {
     const res = await instance.post('user/login', body);
     return res.data;

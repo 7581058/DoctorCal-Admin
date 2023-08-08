@@ -22,7 +22,7 @@ const authInstance = axios.create({
 export const login = async (body: LoginBody) => {
   try {
     const res = await instance.post('user/login', body);
-    return res.data;
+    return res;
   } catch (error) {
     console.log('로그인 실패', error);
   }

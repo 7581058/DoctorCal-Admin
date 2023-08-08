@@ -12,7 +12,7 @@ export default function SignUpValidation({ email, password }: SignUpValidationPr
   }
   if (!password) {
     errors.password = '비밀번호를 입력해주세요.';
-  } else if (password.length <= 8 || password.length >= 20) {
+  } else if (password.length < 8 || password.length > 20) {
     errors.password = '올바른 비밀번호를 입력해주세요.';
   }
   return errors;

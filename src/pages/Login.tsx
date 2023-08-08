@@ -41,12 +41,13 @@ const Login = () => {
     } else {
       try {
         const response = await login({ email: data.email, password: data.password });
-        if (response && response.data.success) {
+        console.log(response);
+        if (response.data.success) {
           setLoginError('');
           const token = response.headers.authorization;
           saveTokenToLocalstorage(token);
           setIsLoggedIn(true);
-          navigate('/');
+          navigate('/users');
         } else {
           setLoginError('로그인에 실패하셨습니다.');
           console.error('로그인 실패');

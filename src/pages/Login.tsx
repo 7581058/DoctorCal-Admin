@@ -4,22 +4,34 @@ import Btn from '@/components/Buttons/Btn';
 import SignUpValidation from '@/lib/Validation/validation';
 import { useForm } from 'react-hook-form';
 import { FiAlertCircle } from 'react-icons/fi';
-
-type FormData = {
-  email: string;
-  password: string;
-};
+import { useEffect, useState } from 'react';
+import { LoginState } from '@/states/stateLogin';
+import { useRecoilState } from 'recoil';
+import { login } from '@/lib/api';
+import { LoginBody } from '@/lib/types';
 
 const Login = () => {
+  const [loginError, setLoginError] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(LoginState);
   const navigate = useNavigate();
+
+  const saveTokenToLocalstorage = (token: string) => {
+    localStorage.setItem('authToken', token);
+  };
+
+  useEffect(() => {
+    isLoggedIn && navigate('/');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<LoginBody>();
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: LoginBody) => {
     const validationErrors = SignUpValidation(data);
 
     if (Object.keys(validationErrors).length > 0) {
@@ -27,8 +39,22 @@ const Login = () => {
         setError(field, { type: 'manual', message });
       });
     } else {
-      console.log(data);
-      navigate('/');
+      try {
+        const response = await login({ email: data.email, password: data.password });
+        if (response && response.data.success) {
+          setLoginError('');
+          const token = response.headers.authorization;
+          saveTokenToLocalstorage(token);
+          setIsLoggedIn(true);
+          navigate('/');
+        } else {
+          setLoginError('로그인에 실패하셨습니다.');
+          console.error('로그인 실패');
+        }
+      } catch (error) {
+        setLoginError('로그인에 실패하셨습니다.');
+        console.error('로그인 실패', error);
+      }
     }
   };
 
@@ -54,6 +80,12 @@ const Login = () => {
               <InfoBox>
                 <FiAlertCircle />
                 <span className="info-text">{errors.password.message}</span>
+              </InfoBox>
+            )}
+            {loginError && (
+              <InfoBox>
+                <FiAlertCircle />
+                <span className="info-text">{loginError}</span>
               </InfoBox>
             )}
           </InputContainer>

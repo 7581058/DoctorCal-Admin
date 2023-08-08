@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import { registerApprove } from '@/lib/api';
-import { getLevel } from '@/utils/decode';
+import { getLevel, getPhone } from '@/utils/decode';
 import { Request } from '@/lib/types';
 
 const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentPage: number }) => {
@@ -25,7 +25,7 @@ const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentP
           <span className="name">{item.username}</span>
           <span className="dept">{item.deptName}</span>
           <span className="level">{getLevel(item.level)}</span>
-          <span className="phone">{item.phone}</span>
+          <span className="phone">{getPhone(item.phone)}</span>
           <span className="button">
             <ApproveButton onClick={() => handleClickApprove(item.username, item.deptName, item.id)}>
               승인

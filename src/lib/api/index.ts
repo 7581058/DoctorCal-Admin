@@ -1,9 +1,8 @@
-import { Eveluation, Login, Pages } from '@/components/lib/types/index.ts';
+import { Eveluation, Login, Pages } from '@/lib/types/index.ts';
 import axios from 'axios';
 
 // register({ page: 0 }).then(a => console.log(a.item)) 사용
 
-const token = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBkb2N0b3JjYWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkS2R1RHpxNXhkMmk0LjNPMTFldm9RLmlEakVVdC9Na3J1V2tQL1RiM3ZEbnlhSTFBcEZxNVciLCJhdXRoIjoiQURNSU4iLCJpZCI6MjcsImV4cCI6MTY5MTQxMjQ1NiwidXNlcm5hbWUiOiJhZG1pbiIsInN0YXR1cyI6IkFQUFJPVkVEIn0.zuFG_LIOuVsZBkNMNw5W5LmZCFKxPGaL3R9BF3MJQWLEsN5V81M6JS8H9Vkd9JksMt286QFuKmu-Rf93CkjORw`;
 const instance = axios.create({
   baseURL: 'http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com',
   headers: {
@@ -15,7 +14,7 @@ const authInstance = axios.create({
   baseURL: 'http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${localStorage.getItem('authToken')}`,
   },
 });
 

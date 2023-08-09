@@ -18,16 +18,14 @@ const DutyRequestsItem = ({ requests, currentPage }: { requests: DutyRequest[]; 
           <div className="originDate">{item.startDate}</div>
           <div className="newDate">{item.startDate}</div>
           <div className="state">
-            {item.evaluation === 'APPROVED' ? (
+            {item.evaluation === 'STANDBY' ? (
               <>
                 <ApplyBtn scheduleId={item.scheduleId} />
                 <RejectBtn scheduleId={item.scheduleId} />
               </>
             ) : (
-              <div className="done">승인 완료</div>
+              <div className="done">처리 완료</div>
             )}
-
-            {/* <button onClick={() => handleClickApprove(item.username, item.deptName, item.id)}>승인</button> */}
           </div>
         </RequestItem>
       ))}

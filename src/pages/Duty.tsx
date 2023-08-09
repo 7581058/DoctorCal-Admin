@@ -19,6 +19,7 @@ const Duty = () => {
   const [requests, setRequests] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [sort, setSort] = useState('desc');
 
   // 당직 리스트 호출
   const getDutyList = async (page: number) => {
@@ -28,6 +29,21 @@ const Duty = () => {
         setTotalPages(res.totalPages);
       })
       .catch(error => console.error(error));
+  };
+
+  // 당직 리스트 호출 (정렬)
+  const getSortedDutyList = async (page: number, selectedSort: string) => {
+    const data = await duty({ page: page, sort: `createdAt,${selectedSort}` });
+    setRequests(data.item);
+    setTotalPages(data.totalPages);
+  };
+
+  // 정렬 핸들러
+  const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedSort = event.target.value;
+    localStorage.setItem('requestsSort', selectedSort);
+    setSort(selectedSort);
+    getSortedDutyList(0, selectedSort);
   };
 
   // 페이지네이션 핸들러
@@ -40,17 +56,22 @@ const Duty = () => {
       getDutyList(pageNumber - 1);
     }
   };
-  console.log('requests', requests);
-  console.log('currentPage', currentPage);
-  console.log('totalPages', totalPages);
 
   useEffect(() => {
-    getDutyList(0);
+    const savedSort = localStorage.getItem('requestsSort');
+    if (savedSort) {
+      setSort(savedSort);
+    }
+    getSortedDutyList(0, savedSort || sort);
   }, []);
 
   return (
     <Container>
-      <BoardContainer title="회원 가입 요청" headers={header}>
+      <Select value={sort} onChange={handleChangeSort}>
+        <option value="desc">최신순</option>
+        <option value="asc">오래된순</option>
+      </Select>
+      <BoardContainer title="당직 변경 관리" headers={header}>
         {requests.length > 0 ? (
           <DutyRequestsItem requests={requests} currentPage={currentPage} />
         ) : (
@@ -76,6 +97,14 @@ const Container = styled.div`
   height: 100%;
   padding: 20px 30px;
   box-sizing: border-box;
+`;
+
+const Select = styled.select`
+  position: absolute;
+  right: 30px;
+  width: 100px;
+  height: 30px;
+  margin-top: -5px;
 `;
 
 const Empty = styled.div`

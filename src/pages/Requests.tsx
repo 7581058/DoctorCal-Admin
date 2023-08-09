@@ -37,6 +37,7 @@ const Requests = () => {
   const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSort = event.target.value;
     localStorage.setItem('requestsSort', selectedSort);
+    setCurrentPage(1);
     setSort(selectedSort);
     getSortedList(0, selectedSort);
   };
@@ -88,6 +89,7 @@ const Container = styled.div`
     right: 30px;
     width: 100px;
     height: 30px;
+    margin-top: -5px;
   }
 `;
 

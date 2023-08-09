@@ -5,11 +5,6 @@ import ApplyBtn from '../Buttons/ApplyBtn';
 import { getCategory, getEvaluation } from '@/utils/decode';
 
 const AnnualItem = ({ requests, currentPage }: { requests: AnnualBody[]; currentPage: number }) => {
-  const handleOnClick = (work: string) => {
-    alert(`${work} 요청 건 처리 완료`);
-    window.location.reload();
-  };
-
   const startIndex = (currentPage - 1) * 10;
 
   return (
@@ -18,12 +13,12 @@ const AnnualItem = ({ requests, currentPage }: { requests: AnnualBody[]; current
         <AnnualItems key={item.scheduleId}>
           <div className="index">{startIndex + index + 1}</div>
           <div className="name">{item.username}</div>
-          <div className="duty">{getCategory(item.category)}</div>
+          <div className="annual">{getCategory(item.category)}</div>
           <div className="startDate">{item.startDate.toString()}</div>
           <div className="endDate">{item.endDate.toString()}</div>
           {item.evaluation === 'STANDBY' ? (
             <div className="evaluationContainer">
-              <ApplyBtn onClick={() => handleOnClick(getCategory(item.category))} scheduleId={item.scheduleId} />
+              <ApplyBtn scheduleId={item.scheduleId} />
               <RejectBtn scheduleId={item.scheduleId} />
             </div>
           ) : (
@@ -61,7 +56,7 @@ const AnnualItems = styled.div`
   .name {
     flex-grow: 1;
   }
-  .duty {
+  .annual {
     flex-grow: 1;
   }
   .startDate {

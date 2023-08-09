@@ -14,7 +14,7 @@ const SideBar = () => {
 
   return (
     <Container>
-      <Logo />
+      <Logo to="/duty" />
       <Menu>
         <MenuItem to="/duty">
           <BsCalendarWeek />
@@ -55,7 +55,7 @@ const Container = styled.div`
   background-color: ${props => props.theme.white};
 `;
 
-const Logo = styled.span`
+const Logo = styled(NavLink)`
   margin-top: 60px;
   background-image: url('src/assets/logo.png');
   background-size: contain;
@@ -63,6 +63,9 @@ const Logo = styled.span`
   width: 160px;
   height: 35px;
   background-position: center;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Menu = styled.div`
@@ -76,6 +79,8 @@ const MenuItem = styled(NavLink)`
   font-weight: 700;
   display: flex;
   align-items: center;
+  cursor: pointer;
+
   span {
     margin-left: 16px;
     box-sizing: border-box;

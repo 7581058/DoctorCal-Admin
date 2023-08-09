@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Btn = ({ content }) => {
+const Btn = ({ content }: { content: string }) => {
   return <Container>{content}</Container>;
 };
 

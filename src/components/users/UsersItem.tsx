@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import { userRetire } from '@/lib/api';
-import { getLevel, getAuth } from '@/utils/decode';
+import { getLevel, getAuth, getPhone } from '@/utils/decode';
 import { Users } from '@/lib/types';
 
 const UsersItem = ({ userList, currentPage }: { userList: Users[]; currentPage: number }) => {
@@ -25,7 +25,7 @@ const UsersItem = ({ userList, currentPage }: { userList: Users[]; currentPage: 
           <span className="name">{item.username}</span>
           <span className="dept">{item.deptName}</span>
           <span className="level">{getLevel(item.level)}</span>
-          <span className="phone">{item.phone}</span>
+          <span className="phone">{getPhone(item.phone)}</span>
           <span className="auth">{getAuth(item.auth)}</span>
           <div className="state">
             <select value={item.status} onChange={() => handleChangeState(item.deptName, item.username, item.id)}>
@@ -53,6 +53,7 @@ const UserItem = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
   span {
     text-align: center;
     flex-basis: 0;
@@ -84,6 +85,8 @@ const UserItem = styled.div`
     flex-grow: 1;
     select {
       width: 100px;
+      height: 30px;
+      margin-top: 0;
     }
   }
 `;

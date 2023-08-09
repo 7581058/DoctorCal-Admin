@@ -42,7 +42,7 @@ const Annual = () => {
       setCurrentPage(pageNumber);
     }
   };
-  console.log(requestsData);
+
   return (
     <Container>
       <select value={sort} onChange={handleChangeSort}>

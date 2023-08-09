@@ -176,3 +176,16 @@ export interface AnnualBody {
   endDate: Date;
   evaluation: string;
 }
+
+// 당직 등록
+export interface dutyRegistBody {
+  chooseDate: string;
+}
+
+// 의사 목록
+export interface DoctorList {
+  userId: number;
+  username: string;
+  level: string;
+  duty: number;
+}

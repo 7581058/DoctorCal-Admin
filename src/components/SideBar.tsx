@@ -1,4 +1,10 @@
-import { BsPersonFillGear, BsCalendarPlus, BsCalendarWeek, BsFillPersonPlusFill } from 'react-icons/bs';
+import {
+  BsPersonFillGear,
+  BsCalendarPlus,
+  BsCalendarWeek,
+  BsFillPersonPlusFill,
+  BsCalendarHeart,
+} from 'react-icons/bs';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { logout } from '@/lib/api';
@@ -20,8 +26,12 @@ const SideBar = () => {
           <BsCalendarWeek />
           <span>당직 변경 관리</span>
         </MenuItem>
-        <MenuItem to="/annual">
+        <MenuItem to="/register">
           <BsCalendarPlus />
+          <span>당직 일정 추가</span>
+        </MenuItem>
+        <MenuItem to="/annual">
+          <BsCalendarHeart />
           <span>연차 신청 관리</span>
         </MenuItem>
         <MenuItem to="/users">
@@ -57,7 +67,7 @@ const Container = styled.div`
 
 const Logo = styled(NavLink)`
   margin-top: 60px;
-  background-image: url('src/assets/logo.png');
+  background-image: url('/logo.png');
   background-size: contain;
   background-repeat: no-repeat;
   width: 160px;
@@ -78,7 +88,6 @@ const Menu = styled.div`
 const MenuItem = styled(NavLink)`
   font-weight: 700;
   display: flex;
-  align-items: center;
   cursor: pointer;
 
   span {
@@ -91,6 +100,9 @@ const MenuItem = styled(NavLink)`
     span {
       border-bottom: 2px solid ${props => props.theme.primary};
     }
+  }
+  svg {
+    margin-top: 2px;
   }
 `;
 

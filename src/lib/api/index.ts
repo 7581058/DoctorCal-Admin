@@ -14,7 +14,7 @@ const authInstance = axios.create({
   baseURL: 'http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+    Authorization: `${localStorage.getItem('authToken')}`,
   },
 });
 

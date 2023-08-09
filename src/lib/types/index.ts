@@ -164,3 +164,15 @@ export interface Users {
   status: string;
   username: string;
 }
+
+// 관리자 연차 결재관리
+export interface AnnualBody {
+  scheduleId: number;
+  username: string;
+  category: string;
+  level: string;
+  createdAt: Date;
+  startDate: Date;
+  endDate: Date;
+  evaluation: string;
+}

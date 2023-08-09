@@ -1,5 +1,5 @@
 import BoardContainer from '@/components/BoardContainer';
-import DutyRequestsItem from '@/components/requests/DutyRequestsItem';
+import DutyRequestsItem from '@/components/duty/DutyRequestsItem';
 import Pagenation from '@/components/Pagenation';
 import { useEffect, useState } from 'react';
 import { duty } from '@/lib/api';
@@ -12,7 +12,7 @@ const header = [
   { name: '유형', width: 1 },
   { name: '신청 날짜', width: 1.5 },
   { name: '희망 날짜', width: 1.5 },
-  { name: '상태', width: 1 },
+  { name: '상태', width: 1.5 },
 ];
 
 const Duty = () => {
@@ -22,9 +22,12 @@ const Duty = () => {
 
   // 당직 리스트 호출
   const getDutyList = async (page: number) => {
-    const data = await duty({ page: page });
-    setRequests(data.item);
-    setTotalPages(data.totalPages);
+    await duty({ page: page })
+      .then(res => {
+        setRequests(res.item);
+        setTotalPages(res.totalPages);
+      })
+      .catch(error => console.error(error));
   };
 
   // 페이지네이션 핸들러

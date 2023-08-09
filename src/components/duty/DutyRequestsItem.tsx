@@ -11,15 +11,22 @@ const DutyRequestsItem = ({ requests, currentPage }: { requests: DutyRequest[]; 
     <Container>
       {requests.map((item, index) => (
         <RequestItem key={item.scheduleId}>
-          <span className="index">{startIndex + index + 1}</span>
-          <span className="name">{item.username}</span>
-          <span className="level">{item.level}</span>
-          <span className="duty">{item.category}</span>
-          <span className="originDate">{item.startDate}</span>
-          <span className="newDate">{item.startDate}</span>
+          <div className="index">{startIndex + index + 1}</div>
+          <div className="name">{item.username}</div>
+          <div className="level">{item.level}</div>
+          <div className="duty">{item.category}</div>
+          <div className="originDate">{item.startDate}</div>
+          <div className="newDate">{item.startDate}</div>
           <div className="state">
-            <ApplyBtn />
-            <RejectBtn />
+            {item.evaluation === 'APPROVED' ? (
+              <>
+                <ApplyBtn scheduleId={item.scheduleId} />
+                <RejectBtn scheduleId={item.scheduleId} />
+              </>
+            ) : (
+              <div className="done">승인 완료</div>
+            )}
+
             {/* <button onClick={() => handleClickApprove(item.username, item.deptName, item.id)}>승인</button> */}
           </div>
         </RequestItem>
@@ -42,7 +49,7 @@ const RequestItem = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  span {
+  div {
     text-align: center;
     flex-basis: 0;
     color: ${props => props.theme.black};
@@ -69,6 +76,10 @@ const RequestItem = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-grow: 1;
+    flex-grow: 1.5;
+    gap: 6px;
+  }
+  .done {
+    display: contents;
   }
 `;

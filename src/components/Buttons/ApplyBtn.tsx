@@ -1,7 +1,24 @@
+import { schedule } from '@/lib/api';
 import styled from 'styled-components';
 
-const ApplyBtn = () => {
-  return <Container>승인</Container>;
+const ApplyBtn = ({ scheduleId }: number) => {
+  console.log(scheduleId);
+  // 당직 승인
+  const approveDuty = async (scheduleId: number) => {
+    console.log(scheduleId);
+    const body = {
+      evaluation: 'APPROVED',
+    };
+    await schedule(scheduleId, body)
+      .then(res => {
+        console.log('당직 승인 성공', res);
+        // setDutyState(!dutyState);
+        // location.reload()
+      })
+      .catch(error => console.error('당직 승인 실패', error));
+  };
+
+  return <Container onClick={() => approveDuty(scheduleId)}>승인</Container>;
 };
 
 export default ApplyBtn;

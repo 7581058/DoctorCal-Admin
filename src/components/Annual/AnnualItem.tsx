@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import { AnnualBody } from '@/lib/types';
 import RejectBtn from '../Buttons/RejectBtn';
 import ApplyBtn from '../Buttons/ApplyBtn';
+import { getCategory, getEvaluation } from '@/utils/decode';
 
 const AnnualItem = ({ requests, currentPage }: { requests: AnnualBody[]; currentPage: number }) => {
   const handleOnClick = (work: string) => {
@@ -17,16 +18,16 @@ const AnnualItem = ({ requests, currentPage }: { requests: AnnualBody[]; current
         <AnnualItems key={item.scheduleId}>
           <div className="index">{startIndex + index + 1}</div>
           <div className="name">{item.username}</div>
-          <div className="duty">{item.category}</div>
+          <div className="duty">{getCategory(item.category)}</div>
           <div className="startDate">{item.startDate.toString()}</div>
           <div className="endDate">{item.endDate.toString()}</div>
           {item.evaluation === 'STANDBY' ? (
             <div className="evaluationContainer">
-              <ApplyBtn onClick={() => handleOnClick(item.category)} scheduleId={item.scheduleId} />
+              <ApplyBtn onClick={() => handleOnClick(getCategory(item.category))} scheduleId={item.scheduleId} />
               <RejectBtn scheduleId={item.scheduleId} />
             </div>
           ) : (
-            <div className="evaluationContainer">{item.evaluation}</div>
+            <div className="evaluationContainer">{getEvaluation(item.evaluation)}</div>
           )}
         </AnnualItems>
       ))}

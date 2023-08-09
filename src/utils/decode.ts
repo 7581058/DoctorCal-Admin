@@ -130,3 +130,23 @@ export const getAuth = (auth: string) => {
   if (auth === 'ADMIN') return '관리자';
   else if (auth === 'USER') return '일반';
 };
+
+export const getCategory = (category: string) => {
+  if (category === 'ANNUAL') {
+    return '휴가 신청';
+  } else {
+    return '당직 변경 신청';
+  }
+};
+
+export const getEvaluation = (eveluation: string) => {
+  if (eveluation === 'STANDBY') {
+    return '대기';
+  } else if (eveluation === 'APPROVED') {
+    return '승인';
+  } else if (eveluation === 'REJECTED') {
+    return '반려';
+  } else if (eveluation === 'CANCELED') {
+    return '취소';
+  }
+};

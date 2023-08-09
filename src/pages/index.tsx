@@ -1,11 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
-import Users from './Users';
-import Requests from './Requests';
-import Login from './Login';
-import Layout from './Layout';
-import Annual from './Annual';
-import Duty from './Duty';
+import Users from '@/pages/Users';
+import Requests from '@/pages/Requests';
+import Login from '@/pages/Login';
+import Layout from '@/pages/Layout';
+import Annual from '@/pages/Annual';
+import Duty from '@/pages/Duty';
+import Register from '@/pages/Register';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
           {
             path: '/duty',
             element: <Duty />,
+          },
+          {
+            path: '/register',
+            element: <Register />,
           },
         ],
       },

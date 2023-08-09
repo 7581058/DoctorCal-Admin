@@ -18,29 +18,45 @@ const Requests = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [requests, setRequests] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [sort, setSort] = useState('desc');
 
-  const getList = async (page: number) => {
-    const data = await register({ page: page });
+  useEffect(() => {
+    const savedSort = localStorage.getItem('requestsSort');
+    if (savedSort) {
+      setSort(savedSort);
+    }
+    getSortedList(0, savedSort || sort);
+  }, []);
+
+  const getSortedList = async (page: number, selectedSort: string) => {
+    const data = await register({ page: page, sort: `createdAt,${selectedSort}` });
     setRequests(data.item);
     setTotalPages(data.totalPages);
   };
 
-  useEffect(() => {
-    getList(0);
-  }, []);
+  const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedSort = event.target.value;
+    localStorage.setItem('requestsSort', selectedSort);
+    setSort(selectedSort);
+    getSortedList(0, selectedSort);
+  };
 
-  const handlePageChange = (pageNumber: number) => {
+  const handleChangePage = (pageNumber: number) => {
     if (pageNumber === 0) {
-      getList(pageNumber);
+      getSortedList(pageNumber, sort);
       setCurrentPage(pageNumber);
     } else {
       setCurrentPage(pageNumber);
-      getList(pageNumber - 1);
+      getSortedList(pageNumber - 1, sort);
     }
   };
 
   return (
     <Container>
+      <select value={sort} onChange={handleChangeSort}>
+        <option value="desc">최신순</option>
+        <option value="asc">오래된순</option>
+      </select>
       <BoardContainer title="회원 가입 요청" headers={header}>
         {requests.length > 0 ? (
           <RequestsItem requests={requests} currentPage={currentPage} />
@@ -49,7 +65,7 @@ const Requests = () => {
         )}
       </BoardContainer>
       {requests.length > 0 ? (
-        <Pagenation totalPage={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
+        <Pagenation totalPage={totalPages} currentPage={currentPage} onPageChange={handleChangePage} />
       ) : (
         <EmptyBottom />
       )}
@@ -67,17 +83,23 @@ const Container = styled.div`
   height: 100%;
   padding: 20px 30px;
   box-sizing: border-box;
+  select {
+    position: absolute;
+    right: 30px;
+    width: 110px;
+    height: 30px;
+  }
 `;
 
 const Empty = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
   font-size: 1.125rem;
-  color: ${props => props.theme.primary};
   font-weight: 500;
+  color: ${props => props.theme.primary};
 `;
 
 const EmptyBottom = styled.div`

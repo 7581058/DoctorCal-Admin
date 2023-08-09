@@ -112,6 +112,7 @@ export interface DutyData {
 export interface PagesBody {
   page: number;
   size?: number;
+  sort?: string;
 }
 
 // 페이지네이션

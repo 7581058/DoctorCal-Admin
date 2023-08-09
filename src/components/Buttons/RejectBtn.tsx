@@ -12,7 +12,7 @@ const RejectBtn = ({ scheduleId }: number) => {
       .then(res => {
         console.log('당직 반려 성공', res);
         // setDutyState(!dutyState);
-        // location.reload()
+        location.reload();
       })
       .catch(error => console.error('당직 반려 실패', error));
   };

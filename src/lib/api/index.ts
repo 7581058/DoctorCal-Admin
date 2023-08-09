@@ -1,17 +1,24 @@
 import { Eveluation, LoginBody, PagesBody } from '@/lib/types/index.ts';
 import axios from 'axios';
 
-// register({ page: 0 }).then(a => console.log(a.item)) 사용
+const host =
+  window.location.hostname === 'localhost'
+    ? 'http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com'
+    : 'api';
+
+export const apiClient = axios.create({
+  baseURL: host,
+});
 
 const instance = axios.create({
-  baseURL: 'http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com',
+  baseURL: host,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
 const authInstance = axios.create({
-  baseURL: 'http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com',
+  baseURL: host,
   headers: {
     'Content-Type': 'application/json',
     Authorization: `${localStorage.getItem('authToken')}`,

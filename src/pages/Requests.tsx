@@ -86,7 +86,7 @@ const Container = styled.div`
   select {
     position: absolute;
     right: 30px;
-    width: 110px;
+    width: 100px;
     height: 30px;
   }
 `;

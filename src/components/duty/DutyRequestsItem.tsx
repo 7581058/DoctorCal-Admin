@@ -26,8 +26,6 @@ const DutyRequestsItem = ({ requests, currentPage }: { requests: DutyRequest[]; 
             ) : (
               <div className="done">승인 완료</div>
             )}
-
-            {/* <button onClick={() => handleClickApprove(item.username, item.deptName, item.id)}>승인</button> */}
           </div>
         </RequestItem>
       ))}

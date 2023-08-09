@@ -102,9 +102,9 @@ const Container = styled.div`
 const Select = styled.select`
   position: absolute;
   right: 30px;
-  top: 80px;
   width: 100px;
   height: 30px;
+  margin-top: -5px;
 `;
 
 const Empty = styled.div`

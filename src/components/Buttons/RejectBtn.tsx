@@ -1,18 +1,18 @@
 import { schedule } from '@/lib/api';
 import styled from 'styled-components';
 
-const RejectBtn = ({ scheduleId }: number) => {
+const RejectBtn = ({ scheduleId }: { scheduleId: number }) => {
   // 당직 반려
   const rejectDuty = async (scheduleId: number) => {
-    console.log(scheduleId);
     const body = {
       evaluation: 'REJECTED',
     };
     await schedule(scheduleId, body)
       .then(res => {
-        console.log('당직 반려 성공', res);
-        // setDutyState(!dutyState);
-        location.reload();
+        if (res.success) {
+          alert('반려 처리가 완료되었습니다.');
+          location.reload();
+        }
       })
       .catch(error => console.error('당직 반려 실패', error));
   };

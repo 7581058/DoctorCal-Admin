@@ -5,14 +5,11 @@ import SignUpValidation from '@/lib/Validation/validation';
 import { useForm } from 'react-hook-form';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
-import { LoginState } from '@/states/stateLogin';
-import { useRecoilState } from 'recoil';
 import { login } from '@/lib/api';
 import { LoginBody } from '@/lib/types';
 
 const Login = () => {
   const [loginError, setLoginError] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useRecoilState(LoginState);
   const navigate = useNavigate();
 
   const saveTokenToLocalstorage = (token: string) => {
@@ -20,7 +17,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    isLoggedIn && navigate('/');
+    localStorage.getItem('authToken') && navigate('/duty');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -36,17 +33,18 @@ const Login = () => {
 
     if (Object.keys(validationErrors).length > 0) {
       Object.entries(validationErrors).forEach(([field, message]) => {
-        setError(field, { type: 'manual', message });
+        if (field === 'email' || field === 'password') {
+          setError(field, { type: 'manual', message });
+        }
       });
     } else {
       try {
         const response = await login({ email: data.email, password: data.password });
         console.log(response);
-        if (response.data.success) {
+        if (response && response.data.success) {
           setLoginError('');
           const token = response.headers.authorization;
           saveTokenToLocalstorage(token);
-          setIsLoggedIn(true);
           navigate('/duty');
         } else {
           setLoginError('로그인에 실패하셨습니다.');

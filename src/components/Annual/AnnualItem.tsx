@@ -1,17 +1,11 @@
 import { styled } from 'styled-components';
-import { registerApprove } from '@/lib/api';
-import { getLevel, getPhone } from '@/utils/decode';
-import { Request } from '@/lib/types';
+import { AnnualBody } from '@/lib/types';
+import RejectBtn from '../Buttons/RejectBtn';
+import ApplyBtn from '../Buttons/ApplyBtn';
 
-const AnnualItem = ({ requests, currentPage }: { requests: Request[]; currentPage: number }) => {
-  const approve = async (userid: number) => {
-    await registerApprove(userid);
-  };
-
-  const handleClickApprove = (name: string, dept: string, id: number) => {
-    console.log(id);
-    approve(id);
-    alert(`${dept} ${name} 가입 승인 완료`);
+const AnnualItem = ({ requests, currentPage }: { requests: AnnualBody[]; currentPage: number }) => {
+  const handleOnClick = (work: string) => {
+    alert(`${work} 요청 건 처리 완료`);
     window.location.reload();
   };
 
@@ -20,17 +14,20 @@ const AnnualItem = ({ requests, currentPage }: { requests: Request[]; currentPag
   return (
     <Container>
       {requests.map((item, index) => (
-        <AnnualItems key={item.id}>
-          <span className="index">{startIndex + index + 1}</span>
-          <span className="name">{item.username}</span>
-          <span className="dept">{item.deptName}</span>
-          <span className="level">{getLevel(item.level)}</span>
-          <span className="phone">{getPhone(item.phone)}</span>
-          <span className="button">
-            <ApproveButton onClick={() => handleClickApprove(item.username, item.deptName, item.id)}>
-              승인
-            </ApproveButton>
-          </span>
+        <AnnualItems key={item.scheduleId}>
+          <div className="index">{startIndex + index + 1}</div>
+          <div className="name">{item.username}</div>
+          <div className="duty">{item.category}</div>
+          <div className="startDate">{item.startDate.toString()}</div>
+          <div className="endDate">{item.endDate.toString()}</div>
+          {item.evaluation === 'STANDBY' ? (
+            <div className="evaluationContainer">
+              <ApplyBtn onClick={() => handleOnClick(item.category)} scheduleId={item.scheduleId} />
+              <RejectBtn scheduleId={item.scheduleId} />
+            </div>
+          ) : (
+            <div className="evaluationContainer">{item.evaluation}</div>
+          )}
         </AnnualItems>
       ))}
     </Container>
@@ -49,9 +46,10 @@ const AnnualItems = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   width: 100%;
   height: 100%;
-  span {
+  div {
     text-align: center;
     flex-basis: 0;
     color: ${props => props.theme.black};
@@ -62,26 +60,20 @@ const AnnualItems = styled.div`
   .name {
     flex-grow: 1;
   }
-  .dept {
+  .duty {
     flex-grow: 1;
   }
-  .level {
-    flex-grow: 1;
-  }
-  .phone {
+  .startDate {
     flex-grow: 1.5;
   }
-  .button {
+  .endDate {
+    flex-grow: 1.5;
+  }
+  .evaluationContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
     flex-grow: 1;
   }
-`;
-
-const ApproveButton = styled.button`
-  width: 50px;
-  height: 25px;
-  border: none;
-  outline: none;
-  border-radius: 8px;
-  background-color: ${props => props.theme.primary};
-  color: ${props => props.theme.white};
 `;

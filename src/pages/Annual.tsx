@@ -11,34 +11,45 @@ const header = [
   { name: '유형', width: 1 },
   { name: '신청 날짜', width: 1.5 },
   { name: '희망 날짜', width: 1.5 },
-  { name: '상태', width: 1.5 },
+  { name: '상태', width: 1 },
 ];
 
 const Annual = () => {
   const [requestsData, setRequestsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [sort, setSort] = useState('desc');
 
-  const annualData = async (page: number) => {
-    const response = await annual({ page });
-    setRequestsData(response.data);
-    setTotalPages(response.totalPages);
+  const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedSort = event.target.value;
+    setCurrentPage(1);
+    setSort(selectedSort);
   };
 
   useEffect(() => {
-    annualData(currentPage - 1); // Fetch data with the correct page number
-  }, [currentPage]);
+    const annualData = async (page: number, sort: string) => {
+      const response = await annual({ page: page, sort: `createdAt,${sort}` });
+      setRequestsData(response.item);
+      setTotalPages(response.totalPages);
+    };
+    annualData(currentPage - 1, sort);
+  }, [currentPage, sort]);
 
   const handlePageChange = (pageNumber: number) => {
     if (pageNumber === 0) {
-      setCurrentPage(1); // Start page numbers from 1
+      setCurrentPage(1);
     } else {
       setCurrentPage(pageNumber);
     }
   };
-
+  console.log(requestsData);
   return (
     <Container>
+      <select value={sort} onChange={handleChangeSort}>
+        <option value="desc">최신순</option>
+        <option value="asc">오래된순</option>
+      </select>
+
       <BoardContainer title="연차 신청 관리" headers={header}>
         {requestsData.length > 0 ? (
           <AnnualItem requests={requestsData} currentPage={currentPage} />
@@ -63,6 +74,13 @@ const Container = styled.div`
   height: 100%;
   padding: 20px 30px;
   box-sizing: border-box;
+  select {
+    position: absolute;
+    right: 30px;
+    width: 100px;
+    height: 30px;
+    margin-top: -5px;
+  }
 `;
 const Empty = styled.div`
   width: 100%;

@@ -1,27 +1,11 @@
 import { hospitalDecode } from '@/utils/decode';
 import { MdOutlineLocalHospital } from 'react-icons/md';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import { getMyPage } from '@/lib/api';
-import { UserData } from '@/lib/types';
+import { useRecoilValue } from 'recoil';
+import { AdminState } from '@/states/stateAdmin';
 
 const MainHeader = () => {
-  const [adminData, setAdminData] = useState<UserData>();
-
-  // 관리자 정보 조회
-  const getAdminInfo = async () => {
-    await getMyPage()
-      .then(res => {
-        if (res.success) {
-          setAdminData(res.item);
-        }
-      })
-      .catch(error => console.log(error));
-  };
-
-  useEffect(() => {
-    getAdminInfo();
-  }, []);
+  const adminData = useRecoilValue(AdminState);
 
   return (
     <Container>

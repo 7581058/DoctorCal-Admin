@@ -5,10 +5,13 @@ import SignUpValidation from '@/lib/Validation/validation';
 import { useForm } from 'react-hook-form';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
-import { login } from '@/lib/api';
+import { getMyPage, login } from '@/lib/api';
 import { LoginBody } from '@/lib/types';
+import { useSetRecoilState } from 'recoil';
+import { AdminState } from '@/states/stateAdmin';
 
 const Login = () => {
+  const setAdminData = useSetRecoilState(AdminState);
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 
@@ -20,6 +23,16 @@ const Login = () => {
     localStorage.getItem('authToken') && navigate('/duty');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const getAdminInfo = async () => {
+    const res = await getMyPage();
+    try {
+      console.log(res);
+      setAdminData(res.item);
+    } catch {
+      console.log('관리자 정보 조회 실패');
+    }
+  };
 
   const {
     register,
@@ -45,6 +58,7 @@ const Login = () => {
           setLoginError('');
           const token = response.headers.authorization;
           saveTokenToLocalstorage(token);
+          getAdminInfo();
           navigate('/duty');
         } else {
           setLoginError('로그인에 실패하셨습니다.');

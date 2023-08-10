@@ -8,7 +8,7 @@ import Btn from '@/components/Buttons/Btn';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useRecoilValue } from 'recoil';
 import { AdminState } from '@/states/stateAdmin';
-// import { Calendar } from '@/components/register';
+import Calendar from '@/components/calendar/Calendar';
 
 interface RegisterFormBody {
   hospitalId: number;
@@ -50,7 +50,9 @@ const Register = () => {
   return (
     <Container>
       <h1>당직 일정 추가</h1>
-      <CalendarContainer>{/* <Calendar /> */}</CalendarContainer>
+      <CalendarContainer>
+        <Calendar />
+      </CalendarContainer>
       <RegisterWrap onSubmit={handleSubmit(onSubmit)}>
         <RegisterForm>
           <Label>
@@ -112,7 +114,6 @@ const Container = styled.div`
 const CalendarContainer = styled.div`
   width: 800px;
   height: 800px;
-  border: 1px solid black;
 `;
 
 const RegisterWrap = styled.div`

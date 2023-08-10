@@ -1,9 +1,9 @@
 import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import CalendarBody from '@/components/register/CalendarBody';
 import { getCalendar } from '@/lib/api';
 import { Schedule } from '@/lib/types';
+import CalendarBody from '@/components/calendar/CalendarBody';
 
 const Calendar = () => {
   const [scheduleData, setScheduleData] = useState<Schedule[]>();
@@ -32,10 +32,6 @@ const Calendar = () => {
 
   return (
     <Container>
-      <button className="today-button" onClick={handleClickToday} disabled={!scheduleData}>
-        오늘
-      </button>
-
       <Header>
         <CalendarButtons>
           <button className="prev-button" onClick={prevMonth} disabled={!scheduleData}>
@@ -44,8 +40,11 @@ const Calendar = () => {
           <button className="next-button" onClick={nextMonth} disabled={!scheduleData}>
             &gt;
           </button>
-          <MonthWrapper>{currentMonth.format('YYYY년 M월')}</MonthWrapper>
         </CalendarButtons>
+        <button className="today-button" onClick={handleClickToday} disabled={!scheduleData}>
+          오늘
+        </button>
+        <MonthWrapper>{currentMonth.format('YYYY년 M월')}</MonthWrapper>
       </Header>
 
       {scheduleData ? (
@@ -74,12 +73,9 @@ export default Calendar;
 const Container = styled.div`
   position: relative;
   width: 100%;
-  height: calc(100% - 64px);
-  padding: 20px;
+  height: 100%;
   box-sizing: border-box;
   .today-button {
-    position: absolute;
-    left: 120px;
     width: 45px;
     height: 30px;
     border: none;
@@ -107,13 +103,11 @@ const Loading = styled.div`
 const Header = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
   width: 100%;
   height: 30px;
   .prev-button,
-  .next-button,
-  .calendar-button,
-  .list-button {
+  .next-button {
     height: 30px;
     border: none;
     outline: none;
@@ -122,14 +116,12 @@ const Header = styled.div`
     color: ${props => props.theme.gray};
     cursor: pointer;
   }
-  .calendar-button,
   .prev-button {
     width: 45px;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
     border-right: none;
   }
-  .list-button,
   .next-button {
     width: 45px;
     border-top-right-radius: 4px;
@@ -142,7 +134,6 @@ const CalendarButtons = styled.div`
 `;
 
 const MonthWrapper = styled.div`
-  margin-left: 70px;
   font-size: 24px;
   font-weight: bold;
   color: ${props => props.theme.primary};

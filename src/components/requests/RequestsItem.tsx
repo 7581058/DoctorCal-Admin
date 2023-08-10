@@ -9,7 +9,6 @@ const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentP
   };
 
   const handleClickApprove = (name: string, dept: string, id: number) => {
-    console.log(id);
     approve(id);
     alert(`${dept} ${name} 가입 승인 완료`);
     window.location.reload();

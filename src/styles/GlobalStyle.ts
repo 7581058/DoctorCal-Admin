@@ -41,6 +41,7 @@ const GlobalStyle = createGlobalStyle`
     border-radius: 8px;
     padding: 0 16px;
     transition: all 0.3s;
+    font-family: 'Pretendard', sans-serif;
     &:focus {
       outline: none;
       border: 1px solid ${props => props.theme.secondary};

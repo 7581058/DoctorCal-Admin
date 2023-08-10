@@ -74,15 +74,19 @@ export const getLevel = (level: string) => {
   }
 };
 
-export const hname = {
-  1: '서울대학교 병원',
-  2: '연세 세브란스 병원',
-  3: '고려대학교 안암병원',
-};
+interface Hname {
+  [key: number]: string;
+}
 
 interface Dname {
   [key: number]: string;
 }
+
+export const hname: Hname = {
+  1: '서울대학교 병원',
+  2: '연세 세브란스 병원',
+  3: '고려대학교 안암병원',
+};
 
 export const dname: Dname = {
   1: '응급의학과',

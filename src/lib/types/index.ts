@@ -20,6 +20,26 @@ export interface UserData {
   updatedAt: string;
 }
 
+//어드민 데이터
+export interface AdminBody {
+  id: number;
+  empNo: number;
+  name: string;
+  email: string;
+  phone: string;
+  hospitalId: number;
+  deptId: number;
+  level: string;
+  auth: string;
+  status: string;
+  annual: number;
+  duty: number;
+  profileImageUrl: string;
+  hiredate: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // 로그인
 export interface LoginBody {
   email: string;
@@ -175,4 +195,19 @@ export interface AnnualBody {
   startDate: Date;
   endDate: Date;
   evaluation: string;
+}
+
+// 당직 등록
+export interface dutyRegistBody {
+  chooseDate: string;
+}
+
+// 의사 목록
+export interface DoctorList {
+  userId: number;
+  username: string;
+  hospitalName: string;
+  deptName: string;
+  level: string;
+  duty: number;
 }

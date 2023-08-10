@@ -4,6 +4,7 @@ import Pagenation from '@/components/Pagenation';
 import { useEffect, useState } from 'react';
 import { duty } from '@/lib/api';
 import styled from 'styled-components';
+import Loading from '@/components/Loading';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -20,34 +21,42 @@ const Duty = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [sort, setSort] = useState('desc');
+  const [isLoading, setIsLoading] = useState(false);
 
   // 당직 리스트 호출
   const getDutyList = async (page: number) => {
+    setIsLoading(true);
     await duty({ page: page })
       .then(res => {
         setRequests(res.item);
         setTotalPages(res.totalPages);
+        setIsLoading(false);
       })
       .catch(error => console.error(error));
   };
 
   // 당직 리스트 호출 (정렬)
   const getSortedDutyList = async (page: number, selectedSort: string) => {
+    setIsLoading(true);
     const data = await duty({ page: page, sort: `createdAt,${selectedSort}` });
     setRequests(data.item);
     setTotalPages(data.totalPages);
+    setIsLoading(false);
   };
 
   // 정렬 핸들러
   const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setIsLoading(true);
     const selectedSort = event.target.value;
     localStorage.setItem('requestsSort', selectedSort);
     setSort(selectedSort);
     getSortedDutyList(0, selectedSort);
+    setIsLoading(false);
   };
 
   // 페이지네이션 핸들러
   const handlePageChange = (pageNumber: number) => {
+    setIsLoading(true);
     if (pageNumber === 0) {
       getDutyList(pageNumber);
       setCurrentPage(pageNumber);
@@ -55,6 +64,7 @@ const Duty = () => {
       setCurrentPage(pageNumber);
       getDutyList(pageNumber - 1);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -67,6 +77,7 @@ const Duty = () => {
 
   return (
     <Container>
+      {isLoading && <Loading />}
       <Select value={sort} onChange={handleChangeSort}>
         <option value="desc">최신순</option>
         <option value="asc">오래된순</option>
@@ -95,13 +106,13 @@ const Container = styled.div`
   gap: 20px;
   width: 100%;
   height: 100%;
-  padding: 20px 30px;
+  padding: 20px 80px 60px 80px;
   box-sizing: border-box;
 `;
 
 const Select = styled.select`
   position: absolute;
-  right: 30px;
+  right: 80px;
   width: 100px;
   height: 30px;
   margin-top: -5px;
@@ -113,8 +124,8 @@ const Empty = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.125rem;
-  color: ${props => props.theme.primary};
+  font-size: 2rem;
+  color: ${props => props.theme.lightGray};
   font-weight: 500;
 `;
 

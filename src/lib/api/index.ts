@@ -27,7 +27,7 @@ export const login = async (body: LoginBody) => {
     const res = await instance.post('/user/login', body);
     return res;
   } catch (error) {
-    console.log('로그인 실패', error);
+    console.error('로그인 실패', error);
   }
 };
 
@@ -37,7 +37,7 @@ export const logout = async () => {
     const res = await instance.post('/user/logout');
     return res.data;
   } catch (error) {
-    console.log('로그아웃 실패');
+    console.error('로그아웃 실패');
   }
 };
 
@@ -51,7 +51,7 @@ export const getMyPage = async () => {
     });
     return res.data;
   } catch (error) {
-    console.log('마이페이지 조회 실패', error);
+    console.error('마이페이지 조회 실패', error);
   }
 };
 
@@ -61,7 +61,7 @@ export const users = async (body: PagesBody) => {
     const res = await authInstance.get('/admin/users', { params: body });
     return res.data;
   } catch (error) {
-    console.log('사용자 리스트 불러오기 실패', error);
+    console.error('사용자 리스트 불러오기 실패', error);
   }
 };
 
@@ -71,7 +71,7 @@ export const register = async (body: PagesBody) => {
     const res = await authInstance.get('/admin/register', { params: body });
     return res.data;
   } catch (error) {
-    console.log('회원가입 요청 불러오기 실패', error);
+    console.error('회원가입 요청 불러오기 실패', error);
   }
 };
 
@@ -81,7 +81,7 @@ export const registerApprove = async (id: number) => {
     const res = await authInstance.post(`/admin/users/${id}/approve`);
     return res.data;
   } catch (error) {
-    console.log('회원가입 요청 승인 실패', error);
+    console.error('회원가입 요청 승인 실패', error);
   }
 };
 
@@ -91,7 +91,7 @@ export const userRetire = async (id: number) => {
     const res = await authInstance.post(`/admin/users/${id}/retire`);
     return res.data;
   } catch (error) {
-    console.log('사용자 재직 상태 변경 실패', error);
+    console.error('사용자 재직 상태 변경 실패', error);
     return error;
   }
 };
@@ -102,7 +102,7 @@ export const annual = async (body: PagesBody) => {
     const res = await authInstance.get('/admin/annual', { params: body });
     return res.data;
   } catch (error) {
-    console.log('연차 결재 관리 실패', error);
+    console.error('연차 결재 관리 실패', error);
   }
 };
 
@@ -112,7 +112,7 @@ export const duty = async (body: PagesBody) => {
     const res = await authInstance.get('/admin/duty', { params: body });
     return res.data;
   } catch (error) {
-    console.log('당직 결재 관리 실패', error);
+    console.error('당직 결재 관리 실패', error);
   }
 };
 
@@ -122,7 +122,7 @@ export const schedule = async (scheduleId: number, body: Eveluation) => {
     const res = await authInstance.post(`/admin/${scheduleId}/evaluation`, body);
     return res.data;
   } catch (error) {
-    console.log('스케쥴 승인 반려 처리 실패', error);
+    console.error('스케쥴 승인 반려 처리 실패', error);
   }
 };
 
@@ -132,7 +132,7 @@ export const hospitalListInfo = async () => {
     const res = await instance.get('/hospital/list');
     return res.data;
   } catch (error) {
-    console.log('병원 정보 리스트 조회 실패', error);
+    console.error('병원 정보 리스트 조회 실패', error);
   }
 };
 
@@ -142,7 +142,7 @@ export const hospitalDeptList = async (hospitalId: number) => {
     const res = await authInstance.get(`/admin/dept/${hospitalId}/list`);
     return res.data;
   } catch (error) {
-    console.log('병원 과 리스트 불러오기 실패', error);
+    console.error('병원 과 리스트 불러오기 실패', error);
   }
 };
 
@@ -150,10 +150,9 @@ export const hospitalDeptList = async (hospitalId: number) => {
 export const hospitalDoctorList = async () => {
   try {
     const res = await authInstance.get(`/admin/hospitalUsers`);
-    console.log(res);
     return res.data;
   } catch (error) {
-    console.log('병원 의사 리스트 불러오기 실패', error);
+    console.error('병원 의사 리스트 불러오기 실패', error);
   }
 };
 
@@ -163,7 +162,7 @@ export const dutyRegist = async (userId: number, body: dutyRegistBody) => {
     const res = await instance.post(`/admin/${userId}/createDuty`, body);
     return res.data;
   } catch (error) {
-    console.log('당직 추가 실패', error);
+    console.error('당직 추가 실패', error);
     throw error;
   }
 };
@@ -174,7 +173,7 @@ export const dutyDelete = async (scheduleId: number) => {
     const res = await authInstance.post(`/admin/${scheduleId}/deleteDuty`);
     return res.data;
   } catch (error) {
-    console.log('당직 삭제 실패', error);
+    console.error('당직 삭제 실패', error);
   }
 };
 
@@ -184,7 +183,7 @@ export const getCalendar = async () => {
     const res = await authInstance.get('/schedule/');
     return res.data;
   } catch (error) {
-    console.log('캘린더 조회 실패', error);
+    console.error('캘린더 조회 실패', error);
   }
 };
 
@@ -198,7 +197,7 @@ export const getAnnual = async (date: string) => {
     });
     return res.data;
   } catch (error) {
-    console.log('휴가 인원 조회 실패', error);
+    console.error('휴가 인원 조회 실패', error);
   }
 };
 
@@ -212,7 +211,7 @@ export const getDuty = async (date: string) => {
     });
     return res.data;
   } catch (error) {
-    console.log('당직 인원 조회 실패', error);
+    console.error('당직 인원 조회 실패', error);
   }
 };
 
@@ -222,6 +221,6 @@ export const deleteDuty = async (id: number) => {
     const res = await authInstance.post(`/admin/${id}/deleteDuty`);
     return res.data;
   } catch (error) {
-    console.log('당직 삭제 실패', error);
+    console.error('당직 삭제 실패', error);
   }
 };

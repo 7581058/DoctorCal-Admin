@@ -73,7 +73,7 @@ const CalendarBody = ({ scheduleData, currentMonth }: { scheduleData: Schedule[]
           }
         }
         //당직 출력
-        if (cal.category === 'DUTY' && cal.startDate === dateObj.format('YYYY-MM-DD')) {
+        if (cal.category === 'DUTY' && cal.endDate === dateObj.format('YYYY-MM-DD')) {
           arrDuty.push(cal.name, cal.level);
         }
       });

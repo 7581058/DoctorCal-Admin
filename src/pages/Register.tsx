@@ -42,6 +42,7 @@ const Register = () => {
     };
     try {
       await dutyRegist(data.userId, body);
+      location.reload();
     } catch (error) {
       setErrorMessage('당직 일정 등록 실패');
     }
@@ -49,7 +50,6 @@ const Register = () => {
 
   return (
     <Container>
-      <h1>당직 일정 추가</h1>
       <CalendarContainer>
         <Calendar />
       </CalendarContainer>
@@ -97,9 +97,11 @@ const Register = () => {
 export default Register;
 
 const Container = styled.div`
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
-  gap: 50px;
+  align-items: center;
+  gap: 80px;
   width: 100%;
   height: 100%;
   padding: 20px 30px;
@@ -108,11 +110,13 @@ const Container = styled.div`
   h1 {
     font-size: 18px;
     width: 100%;
+    box-sizing: border-box;
+    padding: 0 80px;
   }
 `;
 
 const CalendarContainer = styled.div`
-  width: 800px;
+  width: 900px;
   height: 800px;
 `;
 

@@ -72,11 +72,11 @@ const Container = styled.div`
   gap: 20px;
   width: 100%;
   height: 100%;
-  padding: 20px 30px;
+  padding: 20px 80px 60px 80px;
   box-sizing: border-box;
   select {
     position: absolute;
-    right: 30px;
+    right: 80px;
     width: 100px;
     height: 30px;
     margin-top: -5px;

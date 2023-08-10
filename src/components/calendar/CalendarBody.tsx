@@ -135,8 +135,8 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(6, 1fr);
-  width: 100%;
-  height: calc(100% - 90px);
+  min-width: 100%;
+  height: calc(100% - 160px);
   border-right: 1px solid ${props => props.theme.gray};
   border-left: 1px solid ${props => props.theme.gray};
   border-bottom: 1px solid ${props => props.theme.gray};

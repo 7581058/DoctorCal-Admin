@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { dutyRegist, getMyPage, hospitalDoctorList } from '@/lib/api';
-import { UserData, DoctorList } from '@/lib/types';
+import { dutyRegist, hospitalDoctorList } from '@/lib/api';
+import { DoctorList } from '@/lib/types';
 import { hname, getLevel } from '@/utils/decode';
 import Btn from '@/components/Buttons/Btn';
 import { FiAlertCircle } from 'react-icons/fi';
+import { useRecoilValue } from 'recoil';
+import { AdminState } from '@/states/stateAdmin';
 // import { Calendar } from '@/components/register';
 
 interface RegisterFormBody {
@@ -16,54 +18,28 @@ interface RegisterFormBody {
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState('');
-  const [adminData, setAdminData] = useState<UserData>({
-    id: 0,
-    empNo: 0,
-    name: '',
-    email: '',
-    phone: '',
-    hospitalId: 0,
-    deptId: 0,
-    level: '',
-    auth: '',
-    status: '',
-    annual: 0,
-    duty: 0,
-    profileImageUrl: '',
-    hiredate: '',
-    createdAt: '',
-    updatedAt: '',
-  });
+  const adminData = useRecoilValue(AdminState);
   const [doctorList, setDoctorList] = useState<DoctorList[]>();
   const { register, handleSubmit } = useForm<RegisterFormBody>();
 
-  // 관리자 정보 조회
-  const getAdminInfo = async () => {
-    await getMyPage()
-      .then(res => {
-        console.log(res);
-        if (res.success) {
-          setAdminData(res.item);
-        }
-        console.log(adminData);
-      })
-      .catch(error => console.log(error));
-  };
-
   // 의사 목록 호출
   const hospitalDoctors = async () => {
-    const res = await hospitalDoctorList(adminData.hospitalId);
-    setDoctorList(res.item);
+    console.log(adminData.hospitalId);
+    try {
+      const res = await hospitalDoctorList(adminData.hospitalId);
+      console.log('Doctor list response:', res); // 확인용 로그
+      setDoctorList(res.item);
+    } catch (error) {
+      console.error('Error while fetching doctor list:', error);
+    }
   };
-
   useEffect(() => {
-    getAdminInfo();
+    console.log('여기', adminData);
+
     hospitalDoctors();
   }, []);
 
   const onSubmit = async (data: RegisterFormBody) => {
-    console.log(data);
-    console.log('서브미잇', data.userId, data.chooseDate);
     const body = {
       chooseDate: data.chooseDate,
     };
@@ -81,13 +57,8 @@ const Register = () => {
       <RegisterWrap onSubmit={handleSubmit(onSubmit)}>
         <RegisterForm>
           <Label>
-            <span>병원 선택</span>
-            <select defaultValue="default" {...register('hospitalId')}>
-              <option value="default" disabled hidden>
-                병원을 선택해 주세요.
-              </option>
-              <option value={adminData?.hospitalId}>{hname[adminData.hospitalId]}</option>
-            </select>
+            <span>병원 이름</span>
+            <input value={hname[adminData.hospitalId]} readOnly {...register('hospitalId')} />
           </Label>
           <Label>
             <span>당직 대상 선택</span>
@@ -179,15 +150,9 @@ const DoctorListContainer = styled.div`
   input {
     display: none;
     &:checked + .radioWrap {
-      .text {
-        color: ${props => props.theme.primay};
-      }
       font-weight: 700;
     }
     &:hover + .radioWrap {
-      .text {
-        color: ${props => props.theme.primay};
-      }
       font-weight: 700;
     }
   }
@@ -200,7 +165,7 @@ const RadioWrap = styled.div`
   cursor: pointer;
   text-align: center;
   .box1 {
-    flex: 1;
+    flex: 1.5;
   }
   .box2 {
     flex: 1;

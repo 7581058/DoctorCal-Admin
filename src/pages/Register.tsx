@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { dutyRegist, hospitalDoctorList } from '@/lib/api';
 import { DoctorList } from '@/lib/types';
-import { hname, getLevel } from '@/utils/decode';
+import { hospitalDecode, getLevel } from '@/utils/decode';
 import Btn from '@/components/Buttons/Btn';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useRecoilValue } from 'recoil';
 import { AdminState } from '@/states/stateAdmin';
 import Calendar from '@/components/calendar/Calendar';
+import Loading from '@/components/Loading';
 
 interface RegisterFormBody {
   hospitalId: number;
@@ -21,14 +22,19 @@ const Register = () => {
   const adminData = useRecoilValue(AdminState);
   const [doctorList, setDoctorList] = useState<DoctorList[]>();
   const { register, handleSubmit } = useForm<RegisterFormBody>();
+  const [isLoading, setIsLoading] = useState(false);
 
   // 의사 목록 호출
   const hospitalDoctors = async () => {
     try {
+      setIsLoading(true);
       const res = await hospitalDoctorList();
       setDoctorList(res.item);
     } catch (error) {
+      setIsLoading(false);
       console.error('Error while fetching doctor list:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,6 +56,7 @@ const Register = () => {
 
   return (
     <Container>
+      {isLoading && <Loading />}
       <CalendarContainer>
         <Calendar />
       </CalendarContainer>
@@ -57,7 +64,7 @@ const Register = () => {
         <RegisterForm>
           <Label>
             <span>병원 이름</span>
-            <input value={hname[adminData.hospitalId]} readOnly {...register('hospitalId')} />
+            <input value={hospitalDecode[adminData.hospitalId].hospital} readOnly {...register('hospitalId')} />
           </Label>
           <Label>
             <span>당직 대상 선택</span>

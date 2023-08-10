@@ -4,6 +4,7 @@ import Pagenation from '@/components/Pagenation';
 import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { register } from '@/lib/api';
+import Loading from '@/components/Loading';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -19,6 +20,7 @@ const Requests = () => {
   const [requests, setRequests] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [sort, setSort] = useState('desc');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const savedSort = localStorage.getItem('requestsSort');
@@ -29,9 +31,17 @@ const Requests = () => {
   }, []);
 
   const getSortedList = async (page: number, selectedSort: string) => {
-    const data = await register({ page: page, sort: `createdAt,${selectedSort}` });
-    setRequests(data.item);
-    setTotalPages(data.totalPages);
+    try {
+      setIsLoading(true);
+      const data = await register({ page: page, sort: `createdAt,${selectedSort}` });
+      setRequests(data.item);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      setIsLoading(false);
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -54,6 +64,7 @@ const Requests = () => {
 
   return (
     <Container>
+      {isLoading && <Loading />}
       <select value={sort} onChange={handleChangeSort}>
         <option value="desc">최신순</option>
         <option value="asc">오래된순</option>
@@ -62,7 +73,7 @@ const Requests = () => {
         {requests.length > 0 ? (
           <RequestsItem requests={requests} currentPage={currentPage} />
         ) : (
-          <Empty>요청 목록이 존재하지 않습니다.</Empty>
+          !isLoading && <Empty>요청 목록이 존재하지 않습니다.</Empty>
         )}
       </BoardContainer>
       {requests.length > 0 ? (

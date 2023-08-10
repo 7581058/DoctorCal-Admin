@@ -4,6 +4,7 @@ import Pagenation from '@/components/Pagenation';
 import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { users } from '@/lib/api';
+import Loading from '@/components/Loading';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -20,6 +21,7 @@ const Users = () => {
   const [userList, setUserList] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [sort, setSort] = useState('desc');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const savedSort = localStorage.getItem('usersSort');
@@ -30,9 +32,16 @@ const Users = () => {
   }, []);
 
   const getSortedList = async (page: number, selectedSort: string) => {
-    const data = await users({ page: page, sort: `${selectedSort}` });
-    setUserList(data.item);
-    setTotalPages(data.totalPages);
+    try {
+      setIsLoading(true);
+      const data = await users({ page: page, sort: `${selectedSort}` });
+      setUserList(data.item);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -55,6 +64,7 @@ const Users = () => {
 
   return (
     <Container>
+      {isLoading && <Loading />}
       <select className="sort" value={sort} onChange={handleChangeSort}>
         <option value="createdAt,desc">최신순</option>
         <option value="createdAt,asc">오래된순</option>
@@ -63,7 +73,7 @@ const Users = () => {
         {userList.length > 0 ? (
           <UsersItem userList={userList} currentPage={currentPage} />
         ) : (
-          <Empty>사용자 목록이 존재하지 않습니다.</Empty>
+          !isLoading && <Empty>사용자 목록이 존재하지 않습니다.</Empty>
         )}
       </BoardContainer>
       {userList.length > 0 ? (

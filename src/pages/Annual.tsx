@@ -4,6 +4,7 @@ import Pagenation from '@/components/Pagenation';
 import { annual } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
+import Loading from '@/components/Loading';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -19,6 +20,7 @@ const Annual = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [sort, setSort] = useState('desc');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSort = event.target.value;
@@ -28,9 +30,16 @@ const Annual = () => {
 
   useEffect(() => {
     const annualData = async (page: number, sort: string) => {
-      const response = await annual({ page: page, sort: `createdAt,${sort}` });
-      setRequestsData(response.item);
-      setTotalPages(response.totalPages);
+      try {
+        setIsLoading(true);
+        const response = await annual({ page: page, sort: `createdAt,${sort}` });
+        setRequestsData(response.item);
+        setTotalPages(response.totalPages);
+      } catch (error) {
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
+      }
     };
     annualData(currentPage - 1, sort);
   }, [currentPage, sort]);
@@ -45,6 +54,7 @@ const Annual = () => {
 
   return (
     <Container>
+      {isLoading && <Loading />}
       <select value={sort} onChange={handleChangeSort}>
         <option value="desc">최신순</option>
         <option value="asc">오래된순</option>
@@ -54,7 +64,7 @@ const Annual = () => {
         {requestsData.length > 0 ? (
           <AnnualItem requests={requestsData} currentPage={currentPage} />
         ) : (
-          <Empty>요청 목록이 존재하지 않습니다.</Empty>
+          !isLoading && <Empty>요청 목록이 존재하지 않습니다.</Empty>
         )}
       </BoardContainer>
       {requestsData.length > 0 && (

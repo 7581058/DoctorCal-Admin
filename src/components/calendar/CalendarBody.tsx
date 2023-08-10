@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { styled } from 'styled-components';
 import { Schedule } from '@/lib/types';
 import { getLevel } from '@/utils/decode';
-import { CheckModal } from '@/components/register';
+import CheckModal from '@/components/calendar/CheckModal';
 
 const CalendarBody = ({ scheduleData, currentMonth }: { scheduleData: Schedule[]; currentMonth: dayjs.Dayjs }) => {
   const monthStart = currentMonth.startOf('month');
@@ -13,10 +13,23 @@ const CalendarBody = ({ scheduleData, currentMonth }: { scheduleData: Schedule[]
   const [calendarData] = useState<Schedule[]>(scheduleData);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
+  const [modalDate, setmodalDate] = useState('');
 
   const handleClickDuty = (date: dayjs.Dayjs) => {
     const clickDate = date.format('YYYY-MM-DD');
+
+    setModalContent('duty');
     setModalOpen(true);
+    setmodalDate(clickDate);
+  };
+
+  const handleClickAnnual = (date: dayjs.Dayjs) => {
+    const clickDate = date.format('YYYY-MM-DD');
+
+    setModalContent('annual');
+    setModalOpen(true);
+    setmodalDate(clickDate);
   };
 
   //달력 7일 6주 고정
@@ -31,12 +44,34 @@ const CalendarBody = ({ scheduleData, currentMonth }: { scheduleData: Schedule[]
   const mapToDate = (dateArray: dayjs.Dayjs[]) => {
     return dateArray.map((date, index) => {
       const dateObj = dayjs(date);
+      const arrAnnual = [];
+
       const arrDuty: string[] = [];
 
       Object.keys(calendarData).map(item => {
         const index = parseInt(item, 10);
         const cal = calendarData[index];
+        //휴가 출력
+        if (cal.category === 'ANNUAL') {
+          if (dayjs(cal.endDate).diff(cal.startDate, 'day') > 0) {
+            const diffInDays = dayjs(cal.endDate).diff(cal.startDate, 'day');
 
+            const dateRange = [];
+            for (let i = 0; i <= diffInDays; i++) {
+              dateRange.push(dayjs(cal.startDate).add(i, 'day').format('YYYY-MM-DD'));
+            }
+
+            dateRange.map(item => {
+              if (item === dateObj.format('YYYY-MM-DD')) {
+                arrAnnual.push(item);
+              }
+            });
+          } else {
+            if (cal.startDate === dateObj.format('YYYY-MM-DD')) {
+              arrAnnual.push(cal.id);
+            }
+          }
+        }
         //당직 출력
         if (cal.category === 'DUTY' && cal.startDate === dateObj.format('YYYY-MM-DD')) {
           arrDuty.push(cal.name, cal.level);
@@ -77,12 +112,20 @@ const CalendarBody = ({ scheduleData, currentMonth }: { scheduleData: Schedule[]
           ) : (
             ''
           )}
+          {arrAnnual.length > 0 && (
+            <Annual onClick={() => handleClickAnnual(dateObj)}>• 휴가{arrAnnual.length}명</Annual>
+          )}
         </div>
       );
     });
   };
 
-  return <Container>{mapToDate(Date(firstDate))}<CheckModal isOpen={modalOpen} onClose={() => setModalOpen(false)}></Container>;
+  return (
+    <Container>
+      {mapToDate(Date(firstDate))}
+      <CheckModal isOpen={modalOpen} content={modalContent} date={modalDate} onClose={() => setModalOpen(false)} />
+    </Container>
+  );
 };
 
 export default CalendarBody;
@@ -109,10 +152,11 @@ const Container = styled.div`
     justify-content: center;
     border-bottom: 1px solid ${props => props.theme.gray};
     border-right: 1px solid ${props => props.theme.gray};
-    padding: 5px;
+    padding: 8px 0 5px 0;
     font-weight: 700;
     //날짜
     .calendar-date {
+      font-size: 0.875rem;
       position: absolute;
       top: 5px;
       left: 5px;
@@ -144,13 +188,35 @@ const Container = styled.div`
 const Duty = styled.div`
   display: flex;
   align-items: center;
-  width: 75%;
+  width: 100%;
   height: 20px;
+  padding-left: 5px;
   font-weight: 400;
   color: ${props => props.theme.primary};
   box-sizing: border-box;
+  font-size: 0.875rem;
+  cursor: pointer;
   .duty-name {
-    margin-right: 5px;
     font-weight: 700;
+  }
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+`;
+
+const Annual = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 20px;
+  padding-left: 5px;
+  color: ${props => props.theme.secondary};
+  font-weight: 400;
+  box-sizing: border-box;
+  font-size: 0.875rem;
+  text-align: center;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.08);
   }
 `;

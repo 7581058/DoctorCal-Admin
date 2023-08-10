@@ -16,7 +16,7 @@ const DutyRequestsItem = ({ requests, currentPage }: { requests: DutyRequest[]; 
           <div className="level">{getLevel(item.level)}</div>
           <div className="duty">{getCategory(item.category)}</div>
           <div className="originDate">{item.startDate}</div>
-          <div className="newDate">{item.startDate}</div>
+          <div className="newDate">{item.updateDate}</div>
           <div className="state">
             {item.evaluation === 'STANDBY' ? (
               <>

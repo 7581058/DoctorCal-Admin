@@ -25,14 +25,17 @@ const Duty = () => {
 
   // 당직 리스트 호출
   const getDutyList = async (page: number) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     await duty({ page: page })
       .then(res => {
         setRequests(res.item);
         setTotalPages(res.totalPages);
-        setIsLoading(false);
+        // setIsLoading(false);
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        // setIsLoading(false);
+        console.error(error);
+      });
   };
 
   // 당직 리스트 호출 (정렬)

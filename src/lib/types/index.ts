@@ -167,9 +167,12 @@ export interface DutyRequest {
   category: string;
   createdAt: string;
   evaluation: string;
+  hospitalName: string;
   level: string;
   scheduleId: number;
   startDate: string;
+  updateDate: string;
+  updatedAt: string;
   username: string;
 }
 

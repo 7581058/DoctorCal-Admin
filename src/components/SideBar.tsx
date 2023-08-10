@@ -11,10 +11,10 @@ import { logout } from '@/lib/api';
 
 const SideBar = () => {
   const navigate = useNavigate();
-
   const handleClickLogout = async () => {
     await logout();
     localStorage.removeItem('authToken');
+    localStorage.removeItem('recoil-persist');
     navigate('/');
   };
 

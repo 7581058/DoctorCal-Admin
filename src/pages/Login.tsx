@@ -58,7 +58,7 @@ const Login = () => {
           setLoginError('');
           const token = response.headers.authorization;
           saveTokenToLocalstorage(token);
-          getAdminInfo();
+          await getAdminInfo();
           navigate('/duty');
         } else {
           setLoginError('로그인에 실패하셨습니다.');

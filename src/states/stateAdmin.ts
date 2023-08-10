@@ -1,9 +1,10 @@
+import { AdminBody } from '@/lib/types';
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist();
 
-export const AdminState = atom({
+export const AdminState = atom<AdminBody>({
   key: 'AdminState',
   default: {
     id: 0,

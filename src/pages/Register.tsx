@@ -24,18 +24,15 @@ const Register = () => {
 
   // 의사 목록 호출
   const hospitalDoctors = async () => {
-    console.log(adminData.hospitalId);
     try {
-      const res = await hospitalDoctorList(adminData.hospitalId);
-      console.log('Doctor list response:', res); // 확인용 로그
+      const res = await hospitalDoctorList();
       setDoctorList(res.item);
     } catch (error) {
       console.error('Error while fetching doctor list:', error);
     }
   };
-  useEffect(() => {
-    console.log('여기', adminData);
 
+  useEffect(() => {
     hospitalDoctors();
   }, []);
 
@@ -68,6 +65,7 @@ const Register = () => {
                   <input type="radio" value={doctor.userId} className="custom-radio-input" {...register('userId')} />
                   <RadioWrap className="radioWrap">
                     <div className="box1">{doctor.username}</div>
+                    <div className="box2">{doctor.deptName}</div>
                     <div className="box2">{getLevel(doctor.level)}</div>
                     <div className="box3">{doctor.duty}</div>
                   </RadioWrap>

@@ -147,9 +147,10 @@ export const hospitalDeptList = async (hospitalId: number) => {
 };
 
 // 병원 별 의사 목록
-export const hospitalDoctorList = async (hospitalId: number) => {
+export const hospitalDoctorList = async () => {
   try {
-    const res = await instance.get(`/admin/${hospitalId}/users`);
+    const res = await instance.get(`/admin/hospitalUsers`);
+    console.log(res);
     return res.data;
   } catch (error) {
     console.log('병원 의사 리스트 불러오기 실패', error);

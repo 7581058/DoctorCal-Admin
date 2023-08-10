@@ -149,7 +149,7 @@ export const hospitalDeptList = async (hospitalId: number) => {
 // 병원 별 의사 목록
 export const hospitalDoctorList = async () => {
   try {
-    const res = await instance.get(`/admin/hospitalUsers`);
+    const res = await authInstance.get(`/admin/hospitalUsers`);
     console.log(res);
     return res.data;
   } catch (error) {

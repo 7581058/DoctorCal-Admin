@@ -157,19 +157,22 @@ const DoctorListContainer = styled.div`
 `;
 
 const RadioWrap = styled.div`
+  padding: 8px;
   display: flex;
   justify-content: space-around;
   padding: 16px;
+  font-size: 14px;
   cursor: pointer;
   text-align: center;
   .box1 {
-    flex: 1.5;
+    flex: 1.2;
+    text-align: left;
   }
   .box2 {
-    flex: 1;
+    flex: 1.5;
   }
   .box3 {
-    flex: 0.5;
+    flex: 0.2;
   }
 `;
 

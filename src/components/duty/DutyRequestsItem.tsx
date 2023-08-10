@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import ApplyBtn from '@/components/Buttons/ApplyBtn';
 import RejectBtn from '@/components/Buttons/RejectBtn';
 import { DutyRequest } from '@/lib/types';
+import { getCategory, getLevel } from '@/utils/decode';
 
 const DutyRequestsItem = ({ requests, currentPage }: { requests: DutyRequest[]; currentPage: number }) => {
   const startIndex = (currentPage - 1) * 10;
-  console.log(requests);
 
   return (
     <Container>
@@ -13,8 +13,8 @@ const DutyRequestsItem = ({ requests, currentPage }: { requests: DutyRequest[]; 
         <RequestItem key={item.scheduleId}>
           <div className="index">{startIndex + index + 1}</div>
           <div className="name">{item.username}</div>
-          <div className="level">{item.level}</div>
-          <div className="duty">{item.category}</div>
+          <div className="level">{getLevel(item.level)}</div>
+          <div className="duty">{getCategory(item.category)}</div>
           <div className="originDate">{item.startDate}</div>
           <div className="newDate">{item.startDate}</div>
           <div className="state">

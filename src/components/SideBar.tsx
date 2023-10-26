@@ -4,6 +4,7 @@ import {
   BsCalendarWeek,
   BsFillPersonPlusFill,
   BsCalendarHeart,
+  BsClockHistory,
 } from 'react-icons/bs';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -41,6 +42,10 @@ const SideBar = () => {
         <MenuItem to="/requests">
           <BsFillPersonPlusFill />
           <span>회원 가입 요청</span>
+        </MenuItem>
+        <MenuItem to="/attendance">
+          <BsClockHistory />
+          <span>근무 관리</span>
         </MenuItem>
       </Menu>
       <AdminLogo>

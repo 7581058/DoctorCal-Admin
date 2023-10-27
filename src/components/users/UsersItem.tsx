@@ -2,15 +2,17 @@ import { styled } from 'styled-components';
 import { userRetire } from '@/lib/api';
 import { getLevel, getAuth, getPhone } from '@/utils/decode';
 import { Users } from '@/lib/types';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { USER_SELECT_OPTION } from '@/constants/select';
 
 const UsersItem = ({ userList, currentPage }: { userList: Users[]; currentPage: number }) => {
   const handleChangeState = async (dept: string, name: string, userid: number) => {
     const data = await userRetire(userid);
     if (data.response && data.response.status === 400) {
-      alert('재직 중인 사용자만 변경 가능합니다.');
+      alert(MESSAGE_TEXTS.userChangeError);
       window.location.reload();
     } else {
-      alert(`${dept} ${name} 재직 상태 변경 완료`);
+      alert(`${dept} ${name} ${MESSAGE_TEXTS.userChangeSuccess}`);
       window.location.reload();
     }
   };
@@ -29,8 +31,9 @@ const UsersItem = ({ userList, currentPage }: { userList: Users[]; currentPage: 
           <span className="auth">{getAuth(item.auth)}</span>
           <div className="state">
             <select value={item.status} onChange={() => handleChangeState(item.deptName, item.username, item.id)}>
-              <option value="APPROVED">재직중</option>
-              <option value="RETIRED">퇴사</option>
+              {USER_SELECT_OPTION.map(option => (
+                <option value={option.value}>{option.text}</option>
+              ))}
             </select>
           </div>
         </UserItem>

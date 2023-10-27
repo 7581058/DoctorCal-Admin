@@ -3,6 +3,8 @@ import { getAnnual } from '@/lib/api';
 import { styled } from 'styled-components';
 import { getLevel, getPhone } from '@/utils/decode';
 import { AnnualData } from '@/lib/types';
+import { TABLE_HEADER_TEXTS } from '@/constants/table';
+import { MODAL_TEXTS } from '@/constants/modal';
 
 const AnnualModal = ({ date }: { date: string }) => {
   const [annual, setAnnual] = useState<AnnualData[]>([]);
@@ -12,19 +14,19 @@ const AnnualModal = ({ date }: { date: string }) => {
       const data = await getAnnual(date);
       setAnnual(data.item);
     })();
-  }, []);
+  }, [date]);
 
   return (
     <Container>
-      <Title>금일 휴가 인원</Title>
+      <Title>{MODAL_TEXTS.annualModalTitle}</Title>
       <DateWrap>{date}</DateWrap>
       <TableContainer>
         <DataWrap className="header">
-          <div>No.</div>
-          <div>이름</div>
-          <div>파트</div>
-          <div>직급</div>
-          <div className="phone">연락처</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderIndex}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderName}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderDept}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderLevel}</div>
+          <div className="phone">{TABLE_HEADER_TEXTS.tableHeaderPhone}</div>
         </DataWrap>
         <Users>
           {annual.map((item, index) => (

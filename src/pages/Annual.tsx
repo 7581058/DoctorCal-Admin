@@ -5,6 +5,8 @@ import { annual } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import Loading from '@/components/Loading';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -60,11 +62,11 @@ const Annual = () => {
         <option value="asc">오래된순</option>
       </select>
 
-      <BoardContainer title="연차 신청 관리" headers={header}>
+      <BoardContainer title={PAGE_TITLE_TEXTS.annualTitle} headers={header}>
         {requestsData.length > 0 ? (
           <AnnualItem requests={requestsData} currentPage={currentPage} />
         ) : (
-          !isLoading && <Empty>요청 목록이 존재하지 않습니다.</Empty>
+          !isLoading && <Empty>{MESSAGE_TEXTS.listEmpty}</Empty>
         )}
       </BoardContainer>
       {requestsData.length > 0 && (

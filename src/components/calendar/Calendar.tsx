@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { getCalendar } from '@/lib/api';
 import { Schedule } from '@/lib/types';
 import CalendarBody from '@/components/calendar/CalendarBody';
+import { BUTTON_TEXTS } from '@/constants/buttons';
 
 const Calendar = () => {
   const [scheduleData, setScheduleData] = useState<Schedule[]>();
@@ -42,7 +43,7 @@ const Calendar = () => {
           </button>
         </CalendarButtons>
         <button className="today-button" onClick={handleClickToday} disabled={!scheduleData}>
-          오늘
+          {BUTTON_TEXTS.calendarToday}
         </button>
         <MonthWrapper>{currentMonth.format('YYYY년 M월')}</MonthWrapper>
       </Header>

@@ -3,7 +3,7 @@ import ApplyBtn from '@/components/Buttons/ApplyBtn';
 import RejectBtn from '@/components/Buttons/RejectBtn';
 import { DutyRequest } from '@/lib/types';
 import { getCategory, getLevel } from '@/utils/decode';
-
+import { MESSAGE_TEXTS } from '@/constants/message';
 const DutyRequestsItem = ({ requests, currentPage }: { requests: DutyRequest[]; currentPage: number }) => {
   const startIndex = (currentPage - 1) * 10;
 
@@ -24,7 +24,7 @@ const DutyRequestsItem = ({ requests, currentPage }: { requests: DutyRequest[]; 
                 <RejectBtn scheduleId={item.scheduleId} />
               </>
             ) : (
-              <div className="done">처리 완료</div>
+              <div className="done">{MESSAGE_TEXTS.dutyRequestDone}</div>
             )}
           </div>
         </RequestItem>

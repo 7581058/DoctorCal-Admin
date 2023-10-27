@@ -2,6 +2,8 @@ import { styled } from 'styled-components';
 import { registerApprove } from '@/lib/api';
 import { getLevel, getPhone } from '@/utils/decode';
 import { Request } from '@/lib/types';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { BUTTON_TEXTS } from '@/constants/buttons';
 
 const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentPage: number }) => {
   const approve = async (userid: number) => {
@@ -10,7 +12,7 @@ const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentP
 
   const handleClickApprove = (name: string, dept: string, id: number) => {
     approve(id);
-    alert(`${dept} ${name} 가입 승인 완료`);
+    alert(`${dept} ${name} ${MESSAGE_TEXTS.requestSuccess}`);
     window.location.reload();
   };
 
@@ -27,7 +29,7 @@ const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentP
           <span className="phone">{getPhone(item.phone)}</span>
           <span className="button">
             <ApproveButton onClick={() => handleClickApprove(item.username, item.deptName, item.id)}>
-              승인
+              {BUTTON_TEXTS.approve}
             </ApproveButton>
           </span>
         </RequestItem>

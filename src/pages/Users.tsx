@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { users } from '@/lib/api';
 import Loading from '@/components/Loading';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -29,7 +31,7 @@ const Users = () => {
       setSort(savedSort);
     }
     getSortedList(0, savedSort || sort);
-  }, []);
+  }, [sort]);
 
   const getSortedList = async (page: number, selectedSort: string) => {
     try {
@@ -69,11 +71,11 @@ const Users = () => {
         <option value="createdAt,desc">최신순</option>
         <option value="createdAt,asc">오래된순</option>
       </select>
-      <BoardContainer title="사용자 관리" headers={header}>
+      <BoardContainer title={PAGE_TITLE_TEXTS.usersTitle} headers={header}>
         {userList.length > 0 ? (
           <UsersItem userList={userList} currentPage={currentPage} />
         ) : (
-          !isLoading && <Empty>사용자 목록이 존재하지 않습니다.</Empty>
+          !isLoading && <Empty>{MESSAGE_TEXTS.userListEmpty}</Empty>
         )}
       </BoardContainer>
       {userList.length > 0 ? (

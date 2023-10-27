@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { duty } from '@/lib/api';
 import styled from 'styled-components';
 import Loading from '@/components/Loading';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -76,7 +78,7 @@ const Duty = () => {
       setSort(savedSort);
     }
     getSortedDutyList(0, savedSort || sort);
-  }, []);
+  }, [sort]);
 
   return (
     <Container>
@@ -85,11 +87,11 @@ const Duty = () => {
         <option value="desc">최신순</option>
         <option value="asc">오래된순</option>
       </Select>
-      <BoardContainer title="당직 변경 관리" headers={header}>
+      <BoardContainer title={PAGE_TITLE_TEXTS.dutyTitle} headers={header}>
         {requests.length > 0 ? (
           <DutyRequestsItem requests={requests} currentPage={currentPage} />
         ) : (
-          !isLoading && <Empty>요청 목록이 존재하지 않습니다.</Empty>
+          !isLoading && <Empty>{MESSAGE_TEXTS.listEmpty}</Empty>
         )}
       </BoardContainer>
       {requests.length > 0 ? (

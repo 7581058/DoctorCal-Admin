@@ -1,25 +1,27 @@
+import { BUTTON_TEXTS } from '@/constants/buttons';
+import { MESSAGE_TEXTS } from '@/constants/message';
 import { schedule } from '@/lib/api';
 import styled from 'styled-components';
 
 const RejectBtn = ({ scheduleId }: { scheduleId: number }) => {
   // 연차/당직 반려
   const rejectDuty = async (scheduleId: number) => {
-    if (confirm('반려 처리 하시겠습니까?')) {
+    if (confirm(MESSAGE_TEXTS.rejectConfirm)) {
       const body = {
         evaluation: 'REJECTED',
       };
       await schedule(scheduleId, body)
         .then(res => {
           if (res.success) {
-            alert('반려 처리가 완료되었습니다.');
+            alert(MESSAGE_TEXTS.rejectSuccess);
             location.reload();
           }
         })
-        .catch(error => console.error('당직 반려 실패', error));
+        .catch(error => console.error(MESSAGE_TEXTS.rejectError, error));
     }
   };
 
-  return <Container onClick={() => rejectDuty(scheduleId)}>반려</Container>;
+  return <Container onClick={() => rejectDuty(scheduleId)}>{BUTTON_TEXTS.reject}</Container>;
 };
 
 export default RejectBtn;

@@ -1,25 +1,27 @@
+import { BUTTON_TEXTS } from '@/constants/buttons';
+import { MESSAGE_TEXTS } from '@/constants/message';
 import { schedule } from '@/lib/api';
 import styled from 'styled-components';
 
 const ApplyBtn = ({ scheduleId }: { scheduleId: number }) => {
   // 연차/당직 승인
   const approveDuty = async (scheduleId: number) => {
-    if (confirm('승인 처리 하시겠습니까?')) {
+    if (confirm(MESSAGE_TEXTS.approveConfirm)) {
       const body = {
         evaluation: 'APPROVED',
       };
       await schedule(scheduleId, body)
         .then(res => {
           if (res.success) {
-            alert('승인 처리가 완료되었습니다.');
+            alert(MESSAGE_TEXTS.approveSuccess);
             location.reload();
           }
         })
-        .catch(error => console.error('당직 승인 실패', error));
+        .catch(error => console.error(MESSAGE_TEXTS.approveError, error));
     }
   };
 
-  return <Container onClick={() => approveDuty(scheduleId)}>승인</Container>;
+  return <Container onClick={() => approveDuty(scheduleId)}>{BUTTON_TEXTS.approve}</Container>;
 };
 
 export default ApplyBtn;

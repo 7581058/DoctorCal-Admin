@@ -1,9 +1,10 @@
 import { styled } from 'styled-components';
+import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
 
 const Attendance = () => {
   return (
     <Container>
-      <PageTitle>근무관리</PageTitle>
+      <PageTitle>{PAGE_TITLE_TEXTS.attendanceTitle}</PageTitle>
     </Container>
   );
 };

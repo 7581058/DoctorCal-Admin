@@ -3,6 +3,9 @@ import { getDuty, deleteDuty } from '@/lib/api';
 import { styled } from 'styled-components';
 import { getLevel, getPhone } from '@/utils/decode';
 import { DutyData } from '@/lib/types';
+import { MODAL_TEXTS } from '@/constants/modal';
+import { TABLE_HEADER_TEXTS } from '@/constants/table';
+import { BUTTON_TEXTS } from '@/constants/buttons';
 
 const DutyDataInitial = {
   deptName: '',
@@ -34,14 +37,14 @@ const DutyModal = ({ date, onClose }: { date: string; onClose: () => void }) => 
 
   return (
     <Container>
-      <Title>금일 당직 인원</Title>
+      <Title>{MODAL_TEXTS.dutyModalTitle}</Title>
       <DateWrap>{date}</DateWrap>
       <TableContainer>
         <DataWrap>
-          <div>이름</div>
-          <div>파트</div>
-          <div>직급</div>
-          <div>연락처</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderName}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderDept}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderLevel}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderPhone}</div>
         </DataWrap>
         <DataWrap>
           <div>{duty.username}</div>
@@ -49,7 +52,7 @@ const DutyModal = ({ date, onClose }: { date: string; onClose: () => void }) => 
           <div>{getLevel(duty.level)}</div>
           <div>{getPhone(duty.phone)}</div>
         </DataWrap>
-        <DeleteButton onClick={handleClickDelete}>당직 삭제</DeleteButton>
+        <DeleteButton onClick={handleClickDelete}>{BUTTON_TEXTS.dutyDelete}</DeleteButton>
       </TableContainer>
     </Container>
   );

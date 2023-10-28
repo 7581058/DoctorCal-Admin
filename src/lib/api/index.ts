@@ -1,10 +1,8 @@
+const { VITE_BASEURL } = import.meta.env;
 import { Eveluation, LoginBody, PagesBody, dutyRegistBody } from '@/lib/types/index.ts';
 import axios from 'axios';
 
-const host =
-  window.location.hostname === 'localhost'
-    ? 'http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com'
-    : 'api';
+const host = window.location.hostname === 'localhost' ? VITE_BASEURL : 'api';
 
 const instance = axios.create({
   baseURL: host,
@@ -190,11 +188,7 @@ export const getCalendar = async () => {
 // 날짜별 휴가 인원 조회
 export const getAnnual = async (date: string) => {
   try {
-    const res = await instance.get(`/schedule/date?chooseDate=${date}&category=ANNUAL`, {
-      headers: {
-        Authorization: `${localStorage.getItem('authToken')}`,
-      },
-    });
+    const res = await authInstance.get(`/schedule/date?chooseDate=${date}&category=ANNUAL`);
     return res.data;
   } catch (error) {
     console.error('휴가 인원 조회 실패', error);
@@ -204,11 +198,7 @@ export const getAnnual = async (date: string) => {
 // 날짜별 당직 인원 조회
 export const getDuty = async (date: string) => {
   try {
-    const res = await instance.get(`/schedule/date?chooseDate=${date}&category=DUTY`, {
-      headers: {
-        Authorization: `${localStorage.getItem('authToken')}`,
-      },
-    });
+    const res = await authInstance.get(`/schedule/date?chooseDate=${date}&category=DUTY`);
     return res.data;
   } catch (error) {
     console.error('당직 인원 조회 실패', error);

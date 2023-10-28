@@ -7,6 +7,7 @@ import Layout from '@/pages/Layout';
 import Annual from '@/pages/Annual';
 import Duty from '@/pages/Duty';
 import Register from '@/pages/Register';
+import Attendance from '@/pages/Attendance';
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
           {
             path: '/register',
             element: <Register />,
+          },
+          {
+            path: '/attendance',
+            element: <Attendance />,
           },
         ],
       },

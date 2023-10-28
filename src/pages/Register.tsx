@@ -10,6 +10,9 @@ import { useRecoilValue } from 'recoil';
 import { AdminState } from '@/states/stateAdmin';
 import Calendar from '@/components/calendar/Calendar';
 import Loading from '@/components/Loading';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { BUTTON_TEXTS } from '@/constants/buttons';
+import { REGISTER_TEXTS } from '@/constants/register';
 
 interface RegisterFormBody {
   hospitalId: number;
@@ -32,7 +35,7 @@ const Register = () => {
       setDoctorList(res.item);
     } catch (error) {
       setIsLoading(false);
-      console.error('Error while fetching doctor list:', error);
+      console.error(MESSAGE_TEXTS.getDoctorListConsoleError, error);
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +53,7 @@ const Register = () => {
       await dutyRegist(data.userId, body);
       location.reload();
     } catch (error) {
-      setErrorMessage('당직 일정 등록 실패');
+      setErrorMessage(MESSAGE_TEXTS.dutyAddError);
     }
   };
 
@@ -63,11 +66,11 @@ const Register = () => {
       <RegisterWrap onSubmit={handleSubmit(onSubmit)}>
         <RegisterForm>
           <Label>
-            <span>병원 이름</span>
+            <span>{REGISTER_TEXTS.hospitalName}</span>
             <input value={hospitalDecode[adminData.hospitalId].hospital} readOnly {...register('hospitalId')} />
           </Label>
           <Label>
-            <span>당직 대상 선택</span>
+            <span>{REGISTER_TEXTS.selectDutyTarget}</span>
             <DoctorListContainer>
               {doctorList?.map(doctor => (
                 <label key={doctor.userId}>
@@ -83,7 +86,7 @@ const Register = () => {
             </DoctorListContainer>
           </Label>
           <Label>
-            날짜 지정
+            {REGISTER_TEXTS.selectDate}
             <input type="date" {...register('chooseDate')} />
           </Label>
           <div>
@@ -94,7 +97,7 @@ const Register = () => {
               </InfoBox>
             )}
           </div>
-          <Btn content={'등록하기'}></Btn>
+          <Btn content={BUTTON_TEXTS.register}></Btn>
         </RegisterForm>
       </RegisterWrap>
     </Container>

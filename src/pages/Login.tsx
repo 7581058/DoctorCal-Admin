@@ -11,6 +11,9 @@ import { useSetRecoilState } from 'recoil';
 import { AdminState } from '@/states/stateAdmin';
 import backgroundLogo from '/backgroundlogo.png';
 import logowhithtext from '/logowithtext.png';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { LOGIN_TEXTS } from '@/constants/login';
+import { BUTTON_TEXTS } from '@/constants/buttons';
 
 const Login = () => {
   const setAdminData = useSetRecoilState(AdminState);
@@ -29,10 +32,9 @@ const Login = () => {
   const getAdminInfo = async () => {
     const res = await getMyPage();
     try {
-      console.log(res);
       setAdminData(res.item);
     } catch {
-      console.log('관리자 정보 조회 실패');
+      console.error(MESSAGE_TEXTS.getAdminInfoConsoleError);
     }
   };
 
@@ -63,12 +65,12 @@ const Login = () => {
           await getAdminInfo();
           navigate('/duty');
         } else {
-          setLoginError('로그인에 실패하셨습니다.');
-          console.error('로그인 실패');
+          setLoginError(MESSAGE_TEXTS.loginError);
+          console.error(MESSAGE_TEXTS.loginConsoleError);
         }
       } catch (error) {
-        setLoginError('로그인에 실패하셨습니다.');
-        console.error('로그인 실패', error);
+        setLoginError(MESSAGE_TEXTS.loginError);
+        console.error(MESSAGE_TEXTS.loginConsoleError, error);
       }
     }
   };
@@ -77,17 +79,16 @@ const Login = () => {
     <Container>
       <ImgContainer1 />
       <Textwrap>
-        <span>대학병원 의사들을 위한</span>
-        <span>쉽고 빠른 연차 당직 관리 서비스</span>
+        <span>{LOGIN_TEXTS.title}</span>
       </Textwrap>
       <ImgContainer2 />
 
       <Wrap>
-        <h1>어서오세요!</h1>
+        <h1>{LOGIN_TEXTS.hello}</h1>
         <FormWrap onSubmit={handleSubmit(onSubmit)} name="loginForm">
           <InputContainer>
-            <div className="inputTitle">email</div>
-            <input type="email" placeholder="이메일을 입력해주세요." {...register('email')} />
+            <div className="inputTitle">{LOGIN_TEXTS.emailInputTitle}</div>
+            <input type="email" placeholder={LOGIN_TEXTS.emailPlacehoder} {...register('email')} />
             {errors.email && (
               <InfoBox>
                 <FiAlertCircle />
@@ -96,8 +97,8 @@ const Login = () => {
             )}
           </InputContainer>
           <InputContainer>
-            <div className="inputTitle">password</div>
-            <input type="password" placeholder="비밀번호를 입력해주세요." {...register('password')} />
+            <div className="inputTitle">{LOGIN_TEXTS.passwordInputTitle}</div>
+            <input type="password" placeholder={LOGIN_TEXTS.passwordPlacehoder} {...register('password')} />
             {errors.password && (
               <InfoBox>
                 <FiAlertCircle />
@@ -112,7 +113,7 @@ const Login = () => {
             )}
           </InputContainer>
           <InputContainer>
-            <Btn content={'로그인'} />
+            <Btn content={BUTTON_TEXTS.login} />
           </InputContainer>
         </FormWrap>
       </Wrap>

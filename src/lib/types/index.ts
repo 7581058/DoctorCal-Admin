@@ -214,3 +214,10 @@ export interface DoctorList {
   level: string;
   duty: number;
 }
+
+// Alert
+export interface AlertState {
+  isOpen: boolean;
+  content: JSX.Element | string;
+  type: string;
+}

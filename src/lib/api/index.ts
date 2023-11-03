@@ -127,7 +127,7 @@ export const schedule = async (scheduleId: number, body: Eveluation) => {
 // 병원 정보 리스트
 export const hospitalListInfo = async () => {
   try {
-    const res = await instance.get('/hospital/list');
+    const res = await instance.get('/hospital');
     return res.data;
   } catch (error) {
     console.error('병원 정보 리스트 조회 실패', error);
@@ -137,7 +137,7 @@ export const hospitalListInfo = async () => {
 // 병원 과 리스트
 export const hospitalDeptList = async (hospitalId: number) => {
   try {
-    const res = await authInstance.get(`/admin/dept/${hospitalId}/list`);
+    const res = await authInstance.get(`/admin/dept/${hospitalId}`);
     return res.data;
   } catch (error) {
     console.error('병원 과 리스트 불러오기 실패', error);

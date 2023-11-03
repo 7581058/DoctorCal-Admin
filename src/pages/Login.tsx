@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { getMyPage, login } from '@/lib/api';
 import { LoginBody } from '@/lib/types';
 import { useSetRecoilState } from 'recoil';
-import { AdminState } from '@/states/stateAdmin';
+import { stateAdmin } from '@/states/stateAdmin';
 import backgroundLogo from '/backgroundlogo.png';
 import logowhithtext from '/logowithtext.png';
 import { MESSAGE_TEXTS } from '@/constants/message';
@@ -16,7 +16,7 @@ import { LOGIN_TEXTS } from '@/constants/login';
 import { BUTTON_TEXTS } from '@/constants/buttons';
 
 const Login = () => {
-  const setAdminData = useSetRecoilState(AdminState);
+  const setAdminData = useSetRecoilState(stateAdmin);
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 

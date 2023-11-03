@@ -2,10 +2,10 @@ import { hospitalDecode } from '@/utils/decode';
 import { MdOutlineLocalHospital } from 'react-icons/md';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
-import { AdminState } from '@/states/stateAdmin';
+import { stateAdmin } from '@/states/stateAdmin';
 
 const MainHeader = () => {
-  const adminData = useRecoilValue(AdminState);
+  const adminData = useRecoilValue(stateAdmin);
 
   return (
     <Container>

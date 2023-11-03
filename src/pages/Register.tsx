@@ -7,7 +7,7 @@ import { hospitalDecode, getLevel } from '@/utils/decode';
 import Btn from '@/components/Buttons/Btn';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useRecoilValue } from 'recoil';
-import { AdminState } from '@/states/stateAdmin';
+import { stateAdmin } from '@/states/stateAdmin';
 import Calendar from '@/components/calendar/Calendar';
 import Loading from '@/components/Loading';
 import { MESSAGE_TEXTS } from '@/constants/message';
@@ -22,7 +22,7 @@ interface RegisterFormBody {
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState('');
-  const adminData = useRecoilValue(AdminState);
+  const adminData = useRecoilValue(stateAdmin);
   const [doctorList, setDoctorList] = useState<DoctorList[]>();
   const { register, handleSubmit } = useForm<RegisterFormBody>();
   const [isLoading, setIsLoading] = useState(false);

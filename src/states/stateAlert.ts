@@ -1,8 +1,8 @@
 import { atom } from 'recoil';
 import { AlertState } from '@/lib/types';
 
-export const alertState = atom<AlertState>({
-  key: 'alertState',
+export const stateAlert = atom<AlertState>({
+  key: 'stateAlert',
   default: {
     isOpen: false,
     content: '',

@@ -3,10 +3,14 @@ import RequestsItem from '@/components/requests/RequestsItem';
 import Pagenation from '@/components/Pagenation';
 import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
-import { register } from '@/lib/api';
+import { getRegister } from '@/lib/api';
 import Loading from '@/components/Loading';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
+import Alert from '@/components/Alert';
+import { useSetRecoilState } from 'recoil';
+import { AlertState } from '@/lib/types';
+import { stateAlert } from '@/states/stateAlert';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -24,6 +28,8 @@ const Requests = () => {
   const [sort, setSort] = useState('desc');
   const [isLoading, setIsLoading] = useState(false);
 
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   useEffect(() => {
     const savedSort = localStorage.getItem('requestsSort');
     if (savedSort) {
@@ -35,12 +41,15 @@ const Requests = () => {
   const getSortedList = async (page: number, selectedSort: string) => {
     try {
       setIsLoading(true);
-      const data = await register({ page: page, sort: `createdAt,${selectedSort}` });
-      setRequests(data.item);
-      setTotalPages(data.totalPages);
+      const res = await getRegister({ page: page, sort: `createdAt,${selectedSort}` });
+      setRequests(res.item);
+      setTotalPages(res.totalPages);
     } catch (error) {
-      setIsLoading(false);
-      console.error(error);
+      setAlert({
+        isOpen: true,
+        content: `회원가입 요청 리스트 조회 실패\n${error}`,
+        type: 'error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -66,6 +75,7 @@ const Requests = () => {
 
   return (
     <Container>
+      <Alert />
       {isLoading && <Loading />}
       <select value={sort} onChange={handleChangeSort}>
         <option value="desc">최신순</option>

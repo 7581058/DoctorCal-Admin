@@ -4,16 +4,30 @@ import { getLevel, getAuth, getPhone } from '@/utils/decode';
 import { Users } from '@/lib/types';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { USER_SELECT_OPTION } from '@/constants/select';
+import Alert from '@/components/Alert';
+import { useSetRecoilState } from 'recoil';
+import { AlertState } from '@/lib/types';
+import { stateAlert } from '@/states/stateAlert';
 
 const UsersItem = ({ userList, currentPage }: { userList: Users[]; currentPage: number }) => {
-  const handleChangeState = async (dept: string, name: string, userid: number) => {
-    const data = await userRetire(userid);
-    if (data.response && data.response.status === 400) {
-      alert(MESSAGE_TEXTS.userChangeError);
-      window.location.reload();
-    } else {
-      alert(`${dept} ${name} ${MESSAGE_TEXTS.userChangeSuccess}`);
-      window.location.reload();
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
+  const handleChangeState = async (dept: string, name: string, userId: number) => {
+    try {
+      const data = await userRetire(userId);
+      if (data.response && data.response.status === 400) {
+        alert(MESSAGE_TEXTS.userChangeError);
+        window.location.reload();
+      } else {
+        alert(`${dept} ${name} ${MESSAGE_TEXTS.userChangeSuccess}`);
+        window.location.reload();
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `사용자 재직 상태 변경 실패\n${error}`,
+        type: 'error',
+      });
     }
   };
 
@@ -21,6 +35,7 @@ const UsersItem = ({ userList, currentPage }: { userList: Users[]; currentPage: 
 
   return (
     <Container>
+      <Alert />
       {userList.map((item, index) => (
         <UserItem key={item.id}>
           <span className="index">{startIndex + index + 1}</span>

@@ -1,12 +1,16 @@
+import { useState, useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { stateAlert } from '@/states/stateAlert';
+import { AlertState } from '@/lib/types';
+import { getUsers } from '@/lib/api';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
 import BoardContainer from '@/components/BoardContainer';
 import UsersItem from '@/components/users/UsersItem';
 import Pagenation from '@/components/Pagenation';
-import { useState, useEffect } from 'react';
-import { styled } from 'styled-components';
-import { users } from '@/lib/api';
 import Loading from '@/components/Loading';
-import { MESSAGE_TEXTS } from '@/constants/message';
-import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
+import Alert from '@/components/Alert';
+import styled from 'styled-components';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -25,6 +29,8 @@ const Users = () => {
   const [sort, setSort] = useState('desc');
   const [isLoading, setIsLoading] = useState(false);
 
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   useEffect(() => {
     const savedSort = localStorage.getItem('usersSort');
     if (savedSort) {
@@ -36,11 +42,17 @@ const Users = () => {
   const getSortedList = async (page: number, selectedSort: string) => {
     try {
       setIsLoading(true);
-      const data = await users({ page: page, sort: `${selectedSort}` });
-      setUserList(data.item);
-      setTotalPages(data.totalPages);
+      const res = await getUsers({ page: page, sort: `${selectedSort}` });
+      if (res.success) {
+        setUserList(res.item);
+        setTotalPages(res.totalPages);
+      }
     } catch (error) {
-      setIsLoading(false);
+      setAlert({
+        isOpen: true,
+        content: `사용자 관리 조회 실패\n${error}`,
+        type: 'error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -66,6 +78,7 @@ const Users = () => {
 
   return (
     <Container>
+      <Alert />
       {isLoading && <Loading />}
       <select className="sort" value={sort} onChange={handleChangeSort}>
         <option value="createdAt,desc">최신순</option>

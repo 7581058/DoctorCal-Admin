@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import { getDuty, deleteDuty } from '@/lib/api';
 import { styled } from 'styled-components';
 import { getLevel, getPhone } from '@/utils/decode';
-import { DutyData } from '@/lib/types';
+import { AlertState, DutyData } from '@/lib/types';
 import { MODAL_TEXTS } from '@/constants/modal';
 import { TABLE_HEADER_TEXTS } from '@/constants/table';
 import { BUTTON_TEXTS } from '@/constants/buttons';
+import { useSetRecoilState } from 'recoil';
+import { stateAlert } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
 
 const DutyDataInitial = {
   deptName: '',
@@ -21,22 +24,43 @@ const DutyDataInitial = {
 const DutyModal = ({ date, onClose }: { date: string; onClose: () => void }) => {
   const [duty, setDuty] = useState<DutyData>(DutyDataInitial);
 
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   useEffect(() => {
     (async () => {
-      const data = await getDuty(date);
-      setDuty(data.item);
+      try {
+        const data = await getDuty(date);
+        setDuty(data.item);
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `당직 인원 조회 실패\n${error}`,
+          type: 'error',
+        });
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClickDelete = async () => {
-    await deleteDuty(duty.id);
-    onClose();
-    window.location.reload();
+    try {
+      const res = await deleteDuty(duty.id);
+      if (res.success) {
+        onClose();
+        window.location.reload();
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `당직 삭제 실패\n${error}`,
+        type: 'error',
+      });
+    }
   };
 
   return (
     <Container>
+      <Alert />
       <Title>{MODAL_TEXTS.dutyModalTitle}</Title>
       <DateWrap>{date}</DateWrap>
       <TableContainer>

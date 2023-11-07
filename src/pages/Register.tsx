@@ -2,17 +2,19 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { dutyRegist, hospitalDoctorList } from '@/lib/api';
-import { DoctorList } from '@/lib/types';
+import { AlertState, DoctorList } from '@/lib/types';
 import { hospitalDecode, getLevel } from '@/utils/decode';
 import Btn from '@/components/Buttons/Btn';
 import { FiAlertCircle } from 'react-icons/fi';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { stateAdmin } from '@/states/stateAdmin';
 import Calendar from '@/components/calendar/Calendar';
 import Loading from '@/components/Loading';
+import Alert from '@/components/Alert';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { BUTTON_TEXTS } from '@/constants/buttons';
 import { REGISTER_TEXTS } from '@/constants/register';
+import { stateAlert } from '@/states/stateAlert';
 
 interface RegisterFormBody {
   hospitalId: number;
@@ -22,10 +24,13 @@ interface RegisterFormBody {
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState('');
-  const adminData = useRecoilValue(stateAdmin);
   const [doctorList, setDoctorList] = useState<DoctorList[]>();
-  const { register, handleSubmit } = useForm<RegisterFormBody>();
   const [isLoading, setIsLoading] = useState(false);
+
+  const { register, handleSubmit } = useForm<RegisterFormBody>();
+
+  const adminData = useRecoilValue(stateAdmin);
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
 
   // 의사 목록 호출
   const hospitalDoctors = async () => {
@@ -34,8 +39,11 @@ const Register = () => {
       const res = await hospitalDoctorList();
       setDoctorList(res.item);
     } catch (error) {
-      setIsLoading(false);
-      console.error(MESSAGE_TEXTS.getDoctorListConsoleError, error);
+      setAlert({
+        isOpen: true,
+        content: `병원 의사 리스트 불러오기 실패\n${error}`,
+        type: 'error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -59,6 +67,7 @@ const Register = () => {
 
   return (
     <Container>
+      <Alert />
       {isLoading && <Loading />}
       <CalendarContainer>
         <Calendar />

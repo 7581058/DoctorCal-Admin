@@ -7,6 +7,10 @@ import { styled } from 'styled-components';
 import Loading from '@/components/Loading';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
+import { stateAlert } from '@/states/stateAlert';
+import { AlertState } from '@/lib/types';
+import Alert from '@/components/Alert';
+import { useSetRecoilState } from 'recoil';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -24,6 +28,8 @@ const Annual = () => {
   const [sort, setSort] = useState('desc');
   const [isLoading, setIsLoading] = useState(false);
 
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSort = event.target.value;
     setCurrentPage(1);
@@ -38,7 +44,11 @@ const Annual = () => {
         setRequestsData(response.item);
         setTotalPages(response.totalPages);
       } catch (error) {
-        setIsLoading(false);
+        setAlert({
+          isOpen: true,
+          content: `연차 결재 실패\n${error}`,
+          type: 'error',
+        });
       } finally {
         setIsLoading(false);
       }
@@ -57,6 +67,7 @@ const Annual = () => {
   return (
     <Container>
       {isLoading && <Loading />}
+      <Alert />
       <select value={sort} onChange={handleChangeSort}>
         <option value="desc">최신순</option>
         <option value="asc">오래된순</option>

@@ -1,27 +1,48 @@
-import { BUTTON_TEXTS } from '@/constants/buttons';
+import { useSetRecoilState } from 'recoil';
 import { MESSAGE_TEXTS } from '@/constants/message';
+import { BUTTON_TEXTS } from '@/constants/buttons';
 import { schedule } from '@/lib/api';
+import { AlertState } from '@/lib/types';
+import { stateAlert } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
 import styled from 'styled-components';
 
 const RejectBtn = ({ scheduleId }: { scheduleId: number }) => {
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   // 연차/당직 반려
   const rejectDuty = async (scheduleId: number) => {
     if (confirm(MESSAGE_TEXTS.rejectConfirm)) {
       const body = {
         evaluation: 'REJECTED',
       };
-      await schedule(scheduleId, body)
-        .then(res => {
-          if (res.success) {
-            alert(MESSAGE_TEXTS.rejectSuccess);
-            location.reload();
-          }
-        })
-        .catch(error => console.error(MESSAGE_TEXTS.rejectError, error));
+
+      try {
+        const res = await schedule(scheduleId, body);
+        if (res.success) {
+          setAlert({
+            isOpen: true,
+            content: MESSAGE_TEXTS.rejectSuccess,
+            type: 'error',
+          });
+          location.reload();
+        }
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `스케줄 반려 실패\n${error}`,
+          type: 'error',
+        });
+      }
     }
   };
 
-  return <Container onClick={() => rejectDuty(scheduleId)}>{BUTTON_TEXTS.reject}</Container>;
+  return (
+    <>
+      <Alert />
+      <Container onClick={() => rejectDuty(scheduleId)}>{BUTTON_TEXTS.reject}</Container>
+    </>
+  );
 };
 
 export default RejectBtn;

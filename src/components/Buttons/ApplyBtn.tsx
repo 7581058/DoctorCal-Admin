@@ -1,27 +1,47 @@
+import { useSetRecoilState } from 'recoil';
 import { BUTTON_TEXTS } from '@/constants/buttons';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { schedule } from '@/lib/api';
+import { AlertState } from '@/lib/types';
+import { stateAlert } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
 import styled from 'styled-components';
 
 const ApplyBtn = ({ scheduleId }: { scheduleId: number }) => {
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   // 연차/당직 승인
   const approveDuty = async (scheduleId: number) => {
     if (confirm(MESSAGE_TEXTS.approveConfirm)) {
       const body = {
         evaluation: 'APPROVED',
       };
-      await schedule(scheduleId, body)
-        .then(res => {
-          if (res.success) {
-            alert(MESSAGE_TEXTS.approveSuccess);
-            location.reload();
-          }
-        })
-        .catch(error => console.error(MESSAGE_TEXTS.approveError, error));
+      try {
+        const res = await schedule(scheduleId, body);
+        if (res.success) {
+          setAlert({
+            isOpen: true,
+            content: MESSAGE_TEXTS.approveSuccess,
+            type: 'error',
+          });
+          location.reload();
+        }
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `스케줄 승인 실패\n${error}`,
+          type: 'error',
+        });
+      }
     }
   };
 
-  return <Container onClick={() => approveDuty(scheduleId)}>{BUTTON_TEXTS.approve}</Container>;
+  return (
+    <>
+      <Alert />
+      <Container onClick={() => approveDuty(scheduleId)}>{BUTTON_TEXTS.approve}</Container>
+    </>
+  );
 };
 
 export default ApplyBtn;

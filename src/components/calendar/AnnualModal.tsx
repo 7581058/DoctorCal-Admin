@@ -1,23 +1,37 @@
+import { useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
 import { getAnnual } from '@/lib/api';
-import { styled } from 'styled-components';
-import { getLevel, getPhone } from '@/utils/decode';
-import { AnnualData } from '@/lib/types';
+import { AlertState, AnnualData } from '@/lib/types';
 import { TABLE_HEADER_TEXTS } from '@/constants/table';
 import { MODAL_TEXTS } from '@/constants/modal';
+import { getLevel, getPhone } from '@/utils/decode';
+import { stateAlert } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
+import styled from 'styled-components';
 
 const AnnualModal = ({ date }: { date: string }) => {
   const [annual, setAnnual] = useState<AnnualData[]>([]);
 
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   useEffect(() => {
     (async () => {
-      const data = await getAnnual(date);
-      setAnnual(data.item);
+      try {
+        const data = await getAnnual(date);
+        setAnnual(data.item);
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `휴가 인원 조회 실패\n${error}`,
+          type: 'error',
+        });
+      }
     })();
   }, [date]);
 
   return (
     <Container>
+      <Alert />
       <Title>{MODAL_TEXTS.annualModalTitle}</Title>
       <DateWrap>{date}</DateWrap>
       <TableContainer>

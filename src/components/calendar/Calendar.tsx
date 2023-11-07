@@ -1,20 +1,34 @@
-import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
+import { useSetRecoilState } from 'recoil';
 import { getCalendar } from '@/lib/api';
-import { Schedule } from '@/lib/types';
-import CalendarBody from '@/components/calendar/CalendarBody';
+import { AlertState, Schedule } from '@/lib/types';
 import { BUTTON_TEXTS } from '@/constants/buttons';
+import { stateAlert } from '@/states/stateAlert';
+import CalendarBody from '@/components/calendar/CalendarBody';
+import Alert from '@/components/Alert';
+import dayjs from 'dayjs';
+import styled from 'styled-components';
 
 const Calendar = () => {
   const [scheduleData, setScheduleData] = useState<Schedule[]>();
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   const fetchData = async () => {
-    const data = await getCalendar();
-    setScheduleData(data.item);
+    try {
+      const res = await getCalendar();
+      setScheduleData(res.item);
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `캘린더 조회 실패\n${error}`,
+        type: 'error',
+      });
+    }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -33,6 +47,7 @@ const Calendar = () => {
 
   return (
     <Container>
+      <Alert />
       <Header>
         <CalendarButtons>
           <button className="prev-button" onClick={prevMonth} disabled={!scheduleData}>

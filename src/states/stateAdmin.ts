@@ -4,8 +4,8 @@ import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist();
 
-export const AdminState = atom<AdminBody>({
-  key: 'AdminState',
+export const stateAdmin = atom<AdminBody>({
+  key: 'stateAdmin',
   default: {
     id: 0,
     empNo: 0,

@@ -1,20 +1,38 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { styled } from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 import { logout } from '@/lib/api';
+import { AlertState } from '@/lib/types';
 import { BUTTON_TEXTS } from '@/constants/buttons';
 import { SIDE_BAR_OPTIONS, SIDE_BAR_TEXT } from '@/constants/sideBar';
+import { stateAlert } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
+import styled from 'styled-components';
 
 const SideBar = () => {
   const navigate = useNavigate();
+
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   const handleClickLogout = async () => {
-    await logout();
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('recoil-persist');
-    navigate('/');
+    try {
+      const res = await logout();
+      if (res.success) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('recoil-persist');
+        navigate('/');
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `로그아웃 실패\n${error}`,
+        type: 'error',
+      });
+    }
   };
 
   return (
     <Container>
+      <Alert />
       <Logo to="/duty" />
       <Menu>
         {SIDE_BAR_OPTIONS.map((item, index) => (

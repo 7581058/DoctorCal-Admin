@@ -1,12 +1,16 @@
+import { useEffect, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { duty } from '@/lib/api';
+import { AlertState } from '@/lib/types';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
+import { stateAlert } from '@/states/stateAlert';
 import BoardContainer from '@/components/BoardContainer';
 import DutyRequestsItem from '@/components/duty/DutyRequestsItem';
 import Pagenation from '@/components/Pagenation';
-import { useEffect, useState } from 'react';
-import { duty } from '@/lib/api';
-import styled from 'styled-components';
+import Alert from '@/components/Alert';
 import Loading from '@/components/Loading';
-import { MESSAGE_TEXTS } from '@/constants/message';
-import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
+import styled from 'styled-components';
 
 const header = [
   { name: 'No', width: 0.5 },
@@ -25,28 +29,42 @@ const Duty = () => {
   const [sort, setSort] = useState('desc');
   const [isLoading, setIsLoading] = useState(false);
 
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   // 당직 리스트 호출
   const getDutyList = async (page: number) => {
-    // setIsLoading(true);
-    await duty({ page: page })
-      .then(res => {
-        setRequests(res.item);
-        setTotalPages(res.totalPages);
-        // setIsLoading(false);
-      })
-      .catch(error => {
-        // setIsLoading(false);
-        console.error(error);
+    try {
+      setIsLoading(true);
+      const res = await duty({ page: page });
+      setRequests(res.item);
+      setTotalPages(res.totalPages);
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `당직 결재 리스트 호출 실패\n${error}`,
+        type: 'error',
       });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // 당직 리스트 호출 (정렬)
   const getSortedDutyList = async (page: number, selectedSort: string) => {
-    setIsLoading(true);
-    const data = await duty({ page: page, sort: `createdAt,${selectedSort}` });
-    setRequests(data.item);
-    setTotalPages(data.totalPages);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const data = await duty({ page: page, sort: `createdAt,${selectedSort}` });
+      setRequests(data.item);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `당직 결재 리스트 정렬 실패\n${error}`,
+        type: 'error',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // 정렬 핸들러
@@ -82,6 +100,7 @@ const Duty = () => {
 
   return (
     <Container>
+      <Alert />
       {isLoading && <Loading />}
       <Select value={sort} onChange={handleChangeSort}>
         <option value="desc">최신순</option>

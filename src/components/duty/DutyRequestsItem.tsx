@@ -1,9 +1,10 @@
-import styled from 'styled-components';
-import ApplyBtn from '@/components/Buttons/ApplyBtn';
-import RejectBtn from '@/components/Buttons/RejectBtn';
 import { DutyRequest } from '@/lib/types';
 import { getCategory, getLevel } from '@/utils/decode';
 import { MESSAGE_TEXTS } from '@/constants/message';
+import ApplyBtn from '@/components/Buttons/ApplyBtn';
+import RejectBtn from '@/components/Buttons/RejectBtn';
+import styled from 'styled-components';
+
 const DutyRequestsItem = ({ requests, currentPage }: { requests: DutyRequest[]; currentPage: number }) => {
   const startIndex = (currentPage - 1) * 10;
 

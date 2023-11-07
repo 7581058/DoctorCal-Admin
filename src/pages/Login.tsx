@@ -1,23 +1,28 @@
-import { useNavigate } from 'react-router-dom';
-import { styled } from 'styled-components';
-import Btn from '@/components/Buttons/Btn';
-import SignUpValidation from '@/lib/Validation/validation';
-import { useForm } from 'react-hook-form';
-import { FiAlertCircle } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
-import { getMyPage, login } from '@/lib/api';
-import { LoginBody } from '@/lib/types';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
-import { AdminState } from '@/states/stateAdmin';
-import backgroundLogo from '/backgroundlogo.png';
-import logowhithtext from '/logowithtext.png';
+import { FiAlertCircle } from 'react-icons/fi';
+import { getMyPage, login } from '@/lib/api';
+import { AlertState, LoginBody } from '@/lib/types';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { LOGIN_TEXTS } from '@/constants/login';
 import { BUTTON_TEXTS } from '@/constants/buttons';
+import { stateAdmin } from '@/states/stateAdmin';
+import { stateAlert } from '@/states/stateAlert';
+import Btn from '@/components/Buttons/Btn';
+import Alert from '@/components/Alert';
+import SignUpValidation from '@/lib/Validation/validation';
+import backgroundLogo from '/backgroundlogo.png';
+import logowhithtext from '/logowithtext.png';
+import styled from 'styled-components';
 
 const Login = () => {
-  const setAdminData = useSetRecoilState(AdminState);
+  const setAdminData = useSetRecoilState(stateAdmin);
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   const [loginError, setLoginError] = useState('');
+
   const navigate = useNavigate();
 
   const saveTokenToLocalstorage = (token: string) => {
@@ -30,11 +35,17 @@ const Login = () => {
   }, []);
 
   const getAdminInfo = async () => {
-    const res = await getMyPage();
     try {
-      setAdminData(res.item);
-    } catch {
-      console.error(MESSAGE_TEXTS.getAdminInfoConsoleError);
+      const res = await getMyPage();
+      if (res.success) {
+        setAdminData(res.item);
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `마이페이지 조회 실패\n${error}`,
+        type: 'error',
+      });
     }
   };
 
@@ -56,27 +67,25 @@ const Login = () => {
       });
     } else {
       try {
-        const response = await login({ email: data.email, password: data.password });
-        console.log(response);
-        if (response && response.data.success) {
+        const res = await login({ email: data.email, password: data.password });
+        if (res && res.data.success) {
           setLoginError('');
-          const token = response.headers.authorization;
+          const token = res.headers.authorization;
           saveTokenToLocalstorage(token);
           await getAdminInfo();
           navigate('/duty');
         } else {
           setLoginError(MESSAGE_TEXTS.loginError);
-          console.error(MESSAGE_TEXTS.loginConsoleError);
         }
       } catch (error) {
         setLoginError(MESSAGE_TEXTS.loginError);
-        console.error(MESSAGE_TEXTS.loginConsoleError, error);
       }
     }
   };
 
   return (
     <Container>
+      <Alert />
       <ImgContainer1 />
       <Textwrap>
         <span>{LOGIN_TEXTS.title}</span>

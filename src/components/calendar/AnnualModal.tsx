@@ -1,13 +1,13 @@
+import { useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
 import { getAnnual } from '@/lib/api';
-import { styled } from 'styled-components';
-import { getLevel, getPhone } from '@/utils/decode';
 import { AlertState, AnnualData } from '@/lib/types';
 import { TABLE_HEADER_TEXTS } from '@/constants/table';
 import { MODAL_TEXTS } from '@/constants/modal';
+import { getLevel, getPhone } from '@/utils/decode';
 import { stateAlert } from '@/states/stateAlert';
-import { useSetRecoilState } from 'recoil';
 import Alert from '@/components/Alert';
+import styled from 'styled-components';
 
 const AnnualModal = ({ date }: { date: string }) => {
   const [annual, setAnnual] = useState<AnnualData[]>([]);

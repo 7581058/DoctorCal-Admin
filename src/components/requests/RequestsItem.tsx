@@ -1,11 +1,11 @@
-import { styled } from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 import { registerApprove } from '@/lib/api';
-import { getLevel, getPhone } from '@/utils/decode';
 import { AlertState, Request } from '@/lib/types';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { BUTTON_TEXTS } from '@/constants/buttons';
-import { useSetRecoilState } from 'recoil';
+import { getLevel, getPhone } from '@/utils/decode';
 import { stateAlert } from '@/states/stateAlert';
+import styled from 'styled-components';
 
 const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentPage: number }) => {
   const setAlert = useSetRecoilState<AlertState>(stateAlert);

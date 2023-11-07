@@ -1,20 +1,20 @@
-import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { dutyRegist, hospitalDoctorList } from '@/lib/api';
-import { AlertState, DoctorList } from '@/lib/types';
-import { hospitalDecode, getLevel } from '@/utils/decode';
-import Btn from '@/components/Buttons/Btn';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { stateAdmin } from '@/states/stateAdmin';
-import Calendar from '@/components/calendar/Calendar';
-import Loading from '@/components/Loading';
-import Alert from '@/components/Alert';
+import { dutyRegist, hospitalDoctorList } from '@/lib/api';
+import { AlertState, DoctorList } from '@/lib/types';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { BUTTON_TEXTS } from '@/constants/buttons';
 import { REGISTER_TEXTS } from '@/constants/register';
+import { stateAdmin } from '@/states/stateAdmin';
 import { stateAlert } from '@/states/stateAlert';
+import { hospitalDecode, getLevel } from '@/utils/decode';
+import Calendar from '@/components/calendar/Calendar';
+import Loading from '@/components/Loading';
+import Alert from '@/components/Alert';
+import Btn from '@/components/Buttons/Btn';
+import styled from 'styled-components';
 
 interface RegisterFormBody {
   hospitalId: number;

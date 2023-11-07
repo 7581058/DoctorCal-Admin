@@ -1,16 +1,16 @@
+import { useEffect, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { duty } from '@/lib/api';
+import { AlertState } from '@/lib/types';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
+import { stateAlert } from '@/states/stateAlert';
 import BoardContainer from '@/components/BoardContainer';
 import DutyRequestsItem from '@/components/duty/DutyRequestsItem';
 import Pagenation from '@/components/Pagenation';
-import { useEffect, useState } from 'react';
-import { duty } from '@/lib/api';
-import styled from 'styled-components';
-import Loading from '@/components/Loading';
-import { MESSAGE_TEXTS } from '@/constants/message';
-import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
 import Alert from '@/components/Alert';
-import { AlertState } from '@/lib/types';
-import { stateAlert } from '@/states/stateAlert';
-import { useSetRecoilState } from 'recoil';
+import Loading from '@/components/Loading';
+import styled from 'styled-components';
 
 const header = [
   { name: 'No', width: 0.5 },

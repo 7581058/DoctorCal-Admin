@@ -1,22 +1,21 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { FiAlertCircle } from 'react-icons/fi';
-import { useEffect, useState } from 'react';
-import { getMyPage, login } from '@/lib/api';
-import { LoginBody } from '@/lib/types';
 import { useSetRecoilState } from 'recoil';
-import { stateAdmin } from '@/states/stateAdmin';
+import { FiAlertCircle } from 'react-icons/fi';
+import { getMyPage, login } from '@/lib/api';
+import { AlertState, LoginBody } from '@/lib/types';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { LOGIN_TEXTS } from '@/constants/login';
 import { BUTTON_TEXTS } from '@/constants/buttons';
+import { stateAdmin } from '@/states/stateAdmin';
+import { stateAlert } from '@/states/stateAlert';
 import Btn from '@/components/Buttons/Btn';
 import Alert from '@/components/Alert';
 import SignUpValidation from '@/lib/Validation/validation';
 import backgroundLogo from '/backgroundlogo.png';
 import logowhithtext from '/logowithtext.png';
 import styled from 'styled-components';
-import { stateAlert } from '@/states/stateAlert';
-import { AlertState } from '@/lib/types';
 
 const Login = () => {
   const setAdminData = useSetRecoilState(stateAdmin);

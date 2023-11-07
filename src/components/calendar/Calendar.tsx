@@ -1,13 +1,13 @@
-import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
+import { useSetRecoilState } from 'recoil';
 import { getCalendar } from '@/lib/api';
 import { AlertState, Schedule } from '@/lib/types';
-import CalendarBody from '@/components/calendar/CalendarBody';
 import { BUTTON_TEXTS } from '@/constants/buttons';
-import { useSetRecoilState } from 'recoil';
 import { stateAlert } from '@/states/stateAlert';
+import CalendarBody from '@/components/calendar/CalendarBody';
 import Alert from '@/components/Alert';
+import dayjs from 'dayjs';
+import styled from 'styled-components';
 
 const Calendar = () => {
   const [scheduleData, setScheduleData] = useState<Schedule[]>();

@@ -1,5 +1,5 @@
-import { styled } from 'styled-components';
 import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
+import styled from 'styled-components';
 
 const Attendance = () => {
   return (

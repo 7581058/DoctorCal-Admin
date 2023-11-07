@@ -1,10 +1,10 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { logout } from '@/lib/api';
-import { stateAlert } from '@/states/stateAlert';
 import { AlertState } from '@/lib/types';
 import { BUTTON_TEXTS } from '@/constants/buttons';
 import { SIDE_BAR_OPTIONS, SIDE_BAR_TEXT } from '@/constants/sideBar';
+import { stateAlert } from '@/states/stateAlert';
 import Alert from '@/components/Alert';
 import styled from 'styled-components';
 

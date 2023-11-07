@@ -1,13 +1,12 @@
-import { styled } from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 import { userRetire } from '@/lib/api';
-import { getLevel, getAuth, getPhone } from '@/utils/decode';
-import { Users } from '@/lib/types';
+import { Users, AlertState } from '@/lib/types';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { USER_SELECT_OPTION } from '@/constants/select';
-import Alert from '@/components/Alert';
-import { useSetRecoilState } from 'recoil';
-import { AlertState } from '@/lib/types';
+import { getLevel, getAuth, getPhone } from '@/utils/decode';
 import { stateAlert } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
+import styled from 'styled-components';
 
 const UsersItem = ({ userList, currentPage }: { userList: Users[]; currentPage: number }) => {
   const setAlert = useSetRecoilState<AlertState>(stateAlert);

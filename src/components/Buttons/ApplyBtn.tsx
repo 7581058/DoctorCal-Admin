@@ -1,9 +1,9 @@
+import { useSetRecoilState } from 'recoil';
 import { BUTTON_TEXTS } from '@/constants/buttons';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { schedule } from '@/lib/api';
 import { AlertState } from '@/lib/types';
 import { stateAlert } from '@/states/stateAlert';
-import { useSetRecoilState } from 'recoil';
 import Alert from '@/components/Alert';
 import styled from 'styled-components';
 

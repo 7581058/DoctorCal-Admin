@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { getDuty, deleteDuty } from '@/lib/api';
-import { styled } from 'styled-components';
-import { getLevel, getPhone } from '@/utils/decode';
 import { AlertState, DutyData } from '@/lib/types';
 import { MODAL_TEXTS } from '@/constants/modal';
 import { TABLE_HEADER_TEXTS } from '@/constants/table';
 import { BUTTON_TEXTS } from '@/constants/buttons';
-import { useSetRecoilState } from 'recoil';
+import { getLevel, getPhone } from '@/utils/decode';
 import { stateAlert } from '@/states/stateAlert';
 import Alert from '@/components/Alert';
+import styled from 'styled-components';
 
 const DutyDataInitial = {
   deptName: '',

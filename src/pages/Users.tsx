@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { stateAlert } from '@/states/stateAlert';
 import { AlertState } from '@/lib/types';
 import { getUsers } from '@/lib/api';
 import { MESSAGE_TEXTS } from '@/constants/message';
 import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
+import { stateAlert } from '@/states/stateAlert';
 import BoardContainer from '@/components/BoardContainer';
 import UsersItem from '@/components/users/UsersItem';
 import Pagenation from '@/components/Pagenation';

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import dayjs from 'dayjs';
-import { styled } from 'styled-components';
 import { Schedule } from '@/lib/types';
 import { getLevel } from '@/utils/decode';
 import CheckModal from '@/components/calendar/CheckModal';
+import dayjs from 'dayjs';
+import styled from 'styled-components';
 
 const CalendarBody = ({ scheduleData, currentMonth }: { scheduleData: Schedule[]; currentMonth: dayjs.Dayjs }) => {
   const monthStart = currentMonth.startOf('month');

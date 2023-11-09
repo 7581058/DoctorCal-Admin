@@ -221,3 +221,14 @@ export interface AlertState {
   content: JSX.Element | string;
   type: string;
 }
+
+// 대시보드
+export interface DashBoardProps {
+  data: DashBoardData;
+}
+
+export interface DashBoardData {
+  dayWork: string;
+  weekWork: string;
+  monthWork: string;
+}

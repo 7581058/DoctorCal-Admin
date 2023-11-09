@@ -129,3 +129,15 @@ export const getDuty = async (date: string) => {
   const res = await authInstance.get(`/schedule/date?chooseDate=${date}&category=DUTY`);
   return res.data;
 };
+
+// 근무관리 대시보드
+export const getAttendanceDashboard = async () => {
+  const res = await authInstance.get(`/admin/work/dashboard`);
+  return res.data;
+};
+
+// 근무관리 사용자 목록
+export const getAttendanceUsers = async () => {
+  const res = await authInstance.get(`/admin/work`);
+  return res.data;
+};

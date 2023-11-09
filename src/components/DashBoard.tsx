@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const DashBoard = ({ data }: DashBoardProps) => {
   const { dayWork, weekWork, monthWork } = data;
-  console.log(data);
+
   return (
     <Container>
       <Part>

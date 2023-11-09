@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { getAttendanceDashboard } from '@/lib/api';
+import { getAttendanceDashboard, getAttendanceUsers } from '@/lib/api';
 import { AlertState } from '@/lib/types';
 import { stateAlert } from '@/states/stateAlert';
 import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
+import { ATTENDANCE_COLUMN } from '@/constants/attendance';
 import { convertDay } from '@/utils/convertDay';
 import Loading from '@/components/Loading';
 import Alert from '@/components/Alert';
 import DashBoard from '@/components/DashBoard';
+import GridTable from '@/components/Table/GridTable';
 import styled from 'styled-components';
 
 const Attendance = () => {
@@ -16,6 +18,7 @@ const Attendance = () => {
     weekWork: '0:00:00',
     monthWork: '0:00:00',
   });
+  const [tableData, setTableData] = useState([]);
   const [date, setDate] = useState('0000년 00월 00일 (0)');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,9 +28,12 @@ const Attendance = () => {
   const getAttendanceData = async () => {
     try {
       setIsLoading(true);
-      const res = await getAttendanceDashboard();
-      if (res.success) {
-        setDashBoardData(res.item);
+      const [resDashboard, resUser] = await Promise.all([getAttendanceDashboard(), getAttendanceUsers()]);
+      if (resDashboard.success) {
+        setDashBoardData(resDashboard.item);
+      }
+      if (resUser.success) {
+        setTableData(resUser.item);
       }
     } catch (error) {
       setAlert({
@@ -63,8 +69,8 @@ const Attendance = () => {
         <PageTitle>{PAGE_TITLE_TEXTS.attendanceTitle}</PageTitle>
         <SubTitle>{date}</SubTitle>
       </TitleContainer>
-
       <DashBoard data={dashBoardData} />
+      <GridTable rowData={tableData} columnsData={ATTENDANCE_COLUMN} />
     </Container>
   );
 };

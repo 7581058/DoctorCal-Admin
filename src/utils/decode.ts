@@ -1,3 +1,5 @@
+import { ICellRendererParams } from 'ag-grid-community';
+
 interface Hospital {
   hospital: string;
   dept: deptDecode;
@@ -152,5 +154,18 @@ export const getEvaluation = (eveluation: string) => {
     return '반려';
   } else if (eveluation === 'CANCELED') {
     return '취소';
+  }
+};
+
+export const getState = {
+  ON: 'ON',
+  OFF: 'OFF',
+  annual: '휴가',
+};
+
+export const calculateTableRowIndex = (params: ICellRendererParams, currentPage: number, rowsPerPage: number) => {
+  if (params.node && params.node.rowIndex !== null) {
+    const startRow = currentPage * rowsPerPage;
+    return params.node.rowIndex + 1 + startRow;
   }
 };

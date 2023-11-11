@@ -4,29 +4,8 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import styled from 'styled-components';
 import { MdFirstPage, MdLastPage, MdChevronLeft, MdChevronRight } from 'react-icons/md';
-import { ColDef, GridReadyEvent, GridSizeChangedEvent } from 'ag-grid-community';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { ColumnData, GridTableProps } from '@/lib/types';
-
-let minRowHeight = 30;
-let currentRowHeight: number;
-
-const updateRowHeight = (params: GridSizeChangedEvent) => {
-  const bodyViewport = document.querySelector('.ag-body-viewport');
-  if (!bodyViewport) {
-    return;
-  }
-  const gridHeight = bodyViewport.clientHeight;
-  const renderedRowCount = params.api.getDisplayedRowCount();
-  if (renderedRowCount * minRowHeight >= gridHeight) {
-    if (currentRowHeight !== minRowHeight) {
-      currentRowHeight = minRowHeight;
-      params.api.resetRowHeights();
-    }
-  } else {
-    currentRowHeight = Math.floor(gridHeight / renderedRowCount);
-    params.api.resetRowHeights();
-  }
-};
 
 const createColumns = (columnsData: ColumnData[]) => {
   return columnsData.map(columnData => {
@@ -55,7 +34,8 @@ const GridTable = (props: GridTableProps) => {
   const [totalPage, setTotalPage] = useState(0);
   const { rowData, columnsData } = props;
   const columnDefs = createColumns(columnsData);
-
+  const [minRowHeight, setMinRowHeight] = useState(40);
+  const [currentRowHeight, setCurrentRowHeight] = useState(minRowHeight);
   const defaultColDef = useMemo(() => {
     return {
       resizable: true,
@@ -67,19 +47,10 @@ const GridTable = (props: GridTableProps) => {
   }, []);
 
   const onGridReady = useCallback((params: GridReadyEvent) => {
-    minRowHeight = params.api.getSizesForCurrentTheme().rowHeight;
-    currentRowHeight = minRowHeight;
+    setMinRowHeight(params.api.getSizesForCurrentTheme().rowHeight);
+    setCurrentRowHeight(minRowHeight);
     params.api.sizeColumnsToFit();
 
-    if (gridRef.current) {
-      setCurrentPage(gridRef.current.api.paginationGetCurrentPage() + 1);
-      setTotalPage(gridRef.current.api.paginationGetTotalPages());
-    }
-  }, []);
-
-  const onGridSizeChanged = useCallback((params: GridSizeChangedEvent) => {
-    updateRowHeight(params);
-    params.api.sizeColumnsToFit();
     if (gridRef.current) {
       setCurrentPage(gridRef.current.api.paginationGetCurrentPage() + 1);
       setTotalPage(gridRef.current.api.paginationGetTotalPages());
@@ -88,7 +59,7 @@ const GridTable = (props: GridTableProps) => {
 
   const gridOptions = {
     headerHeight: 50,
-    rowHeight: 30,
+    rowHeight: 40,
   };
 
   const onBtFirst = useCallback(() => {
@@ -137,7 +108,6 @@ const GridTable = (props: GridTableProps) => {
           getRowHeight={getRowHeight}
           gridOptions={gridOptions}
           onGridReady={onGridReady}
-          onGridSizeChanged={onGridSizeChanged}
           pagination={true}
           suppressRowTransform={true}
           paginationAutoPageSize={true}
@@ -175,7 +145,7 @@ const Container = styled.div`
   .ag-theme-custom {
     width: 100%;
     height: 100%;
-    --ag-row-border-width: 0px;
+    --ag-row-border-width: 0;
     .ag-header-cell-label {
       justify-content: center;
     }

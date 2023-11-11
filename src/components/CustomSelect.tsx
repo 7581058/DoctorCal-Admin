@@ -6,18 +6,19 @@ interface Option {
 interface CustomSelectProps {
   options: Option[];
   value: string;
-  onChange: (newSort: string) => void;
+  onChange: (newValue: string) => void;
 }
 
 const CustomSelect = (props: CustomSelectProps) => {
   const { options, value, onChange } = props;
-  const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+
+  const handleChangeValue = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSort = event.target.value;
     onChange(selectedSort);
   };
 
   return (
-    <select value={value} onChange={handleChangeSort}>
+    <select value={value} onChange={handleChangeValue}>
       {options &&
         options.map((option, index) => (
           <option key={index} value={option.value}>

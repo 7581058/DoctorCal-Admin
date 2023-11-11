@@ -6,7 +6,7 @@ import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
 import { REQUESTS_COLUMN } from '@/constants/request';
 import { SORT_SELECT_OPTION } from '@/constants/select';
 import { stateAlert } from '@/states/stateAlert';
-import { useSort } from '@/hooks/useSort';
+import { useChangeValue } from '@/hooks/useChangeValue';
 import GridTable from '@/components/Table/GridTable';
 import Loading from '@/components/Loading';
 import Alert from '@/components/Alert';
@@ -19,7 +19,7 @@ const Requests = () => {
 
   const setAlert = useSetRecoilState<AlertState>(stateAlert);
 
-  const { sort, handleSortChange } = useSort('desc');
+  const { value, handleValueChange } = useChangeValue('desc');
 
   const getUsersList = async (page: number, selectedSort: string) => {
     try {
@@ -38,8 +38,8 @@ const Requests = () => {
   };
 
   useEffect(() => {
-    getUsersList(0, sort);
-  }, [sort]);
+    getUsersList(0, value);
+  }, [value]);
 
   return (
     <Container>
@@ -48,7 +48,7 @@ const Requests = () => {
       <TitleContainer>
         <PageTitle>{PAGE_TITLE_TEXTS.requestTitle}</PageTitle>
         <SubTitle>
-          <CustomSelect options={SORT_SELECT_OPTION} value={sort} onChange={handleSortChange} />
+          <CustomSelect options={SORT_SELECT_OPTION} value={value} onChange={handleValueChange} />
         </SubTitle>
       </TitleContainer>
       <GridTable rowData={tableData} columnsData={REQUESTS_COLUMN} />

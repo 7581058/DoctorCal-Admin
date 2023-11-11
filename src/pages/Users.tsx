@@ -66,10 +66,6 @@ const Container = styled.div`
   height: 100%;
   padding: 20px 80px 60px 80px;
   box-sizing: border-box;
-  select {
-    width: 100px;
-    height: 30px;
-  }
 `;
 
 const PageTitle = styled.span`
@@ -88,4 +84,11 @@ const SubTitle = styled.div`
   font-size: 14px;
   font-weight: 700;
   color: ${props => props.theme.primary};
+  select {
+    position: absolute;
+    right: 80px;
+    width: 100px;
+    height: 30px;
+    margin-top: -5px;
+  }
 `;

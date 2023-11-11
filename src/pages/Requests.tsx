@@ -4,28 +4,24 @@ import { getRegister } from '@/lib/api';
 import { AlertState } from '@/lib/types';
 import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
 import { REQUESTS_COLUMN } from '@/constants/request';
+import { SORT_SELECT_OPTION } from '@/constants/select';
 import { stateAlert } from '@/states/stateAlert';
+import { useSort } from '@/hooks/useSort';
 import GridTable from '@/components/Table/GridTable';
 import Loading from '@/components/Loading';
 import Alert from '@/components/Alert';
+import CustomSelect from '@/components/CustomSelect';
 import styled from 'styled-components';
 
 const Requests = () => {
   const [tableData, setTableData] = useState([]);
-  const [sort, setSort] = useState('desc');
   const [isLoading, setIsLoading] = useState(false);
 
   const setAlert = useSetRecoilState<AlertState>(stateAlert);
 
-  useEffect(() => {
-    const savedSort = localStorage.getItem('requestsSort');
-    if (savedSort) {
-      setSort(savedSort);
-    }
-    getSortedList(0, savedSort || sort);
-  }, [sort]);
+  const { sort, handleSortChange } = useSort('desc');
 
-  const getSortedList = async (page: number, selectedSort: string) => {
+  const getUsersList = async (page: number, selectedSort: string) => {
     try {
       setIsLoading(true);
       const res = await getRegister({ page: page, sort: `createdAt,${selectedSort}` });
@@ -41,12 +37,9 @@ const Requests = () => {
     }
   };
 
-  const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedSort = event.target.value;
-    localStorage.setItem('requestsSort', selectedSort);
-    setSort(selectedSort);
-    getSortedList(0, selectedSort);
-  };
+  useEffect(() => {
+    getUsersList(0, sort);
+  }, [sort]);
 
   return (
     <Container>
@@ -55,10 +48,7 @@ const Requests = () => {
       <TitleContainer>
         <PageTitle>{PAGE_TITLE_TEXTS.requestTitle}</PageTitle>
         <SubTitle>
-          <select value={sort} onChange={handleChangeSort}>
-            <option value="desc">최신순</option>
-            <option value="asc">오래된순</option>
-          </select>
+          <CustomSelect options={SORT_SELECT_OPTION} value={sort} onChange={handleSortChange} />
         </SubTitle>
       </TitleContainer>
       <GridTable rowData={tableData} columnsData={REQUESTS_COLUMN} />

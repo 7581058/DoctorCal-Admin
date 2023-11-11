@@ -9,13 +9,14 @@ import { ColumnData, GridTableProps } from '@/lib/types';
 
 const createColumns = (columnsData: ColumnData[]) => {
   return columnsData.map(columnData => {
-    const { headerName, field, flex, cellRenderer, filter } = columnData;
+    const { headerName, field, flex, cellRenderer, filter, valueGetter } = columnData;
     const colDef: ColDef = {
       headerName,
       field,
       flex,
       cellRenderer,
       filter,
+      valueGetter,
       cellStyle: {
         textAlign: 'center',
         display: 'flex',

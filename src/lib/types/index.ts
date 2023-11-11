@@ -1,5 +1,5 @@
 // 프로젝트에 사용되는 types 정리 //
-import { ICellRendererParams } from 'ag-grid-community';
+import { ICellRendererParams, ValueGetterParams } from 'ag-grid-community';
 
 // 사용자 데이터
 export interface UserData {
@@ -258,11 +258,12 @@ export interface CellStyleType {
 // ag grid 컬럼
 export interface ColumnData {
   headerName: string;
-  field: string;
+  field?: string;
   flex: number;
   cellStyle?: CellStyleType;
   cellRenderer?: (params: ICellRendererParams) => React.ReactNode;
   filter?: boolean;
+  valueGetter?: (params: ValueGetterParams) => string;
 }
 
 // ag grid 컴포넌트

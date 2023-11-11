@@ -169,3 +169,7 @@ export const calculateTableRowIndex = (params: ICellRendererParams, currentPage:
     return params.node.rowIndex + 1 + startRow;
   }
 };
+
+export const splitTimeStamp = (timeStamp: string) => {
+  return timeStamp.split('T')[0];
+};

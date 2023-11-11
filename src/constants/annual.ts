@@ -1,8 +1,8 @@
-import { getLevel, getCategory, calculateTableRowIndex } from '@/utils/decode';
-import { ICellRendererParams } from 'ag-grid-community';
+import { getCategory, calculateTableRowIndex, splitTimeStamp } from '@/utils/decode';
+import { ICellRendererParams, ValueGetterParams } from 'ag-grid-community';
 import RowState from '@/components/duty/RowState';
 
-export const DUTYS_COLUMN = [
+export const ANNUAL_COLUMN = [
   {
     headerName: 'No.',
     field: 'index',
@@ -15,12 +15,6 @@ export const DUTYS_COLUMN = [
     flex: 1,
   },
   {
-    headerName: '직급',
-    field: 'level',
-    flex: 1,
-    cellRenderer: (params: ICellRendererParams) => getLevel(params.value),
-  },
-  {
     headerName: '유형',
     field: 'category',
     flex: 1.5,
@@ -28,18 +22,23 @@ export const DUTYS_COLUMN = [
   },
   {
     headerName: '신청 날짜',
-    field: 'startDate',
-    flex: 1.5,
+    field: 'createdAt',
+    flex: 1,
+    cellRenderer: (params: ICellRendererParams) => splitTimeStamp(params.value),
   },
   {
     headerName: '희망 날짜',
-    field: 'updateDate',
-    flex: 1.5,
+    flex: 2,
+    valueGetter: (params: ValueGetterParams) => {
+      const field1 = params.data.startDate;
+      const field2 = params.data.endDate;
+      return `${field1} - ${field2}`;
+    },
   },
   {
     headerName: '상태',
     field: 'evaluation',
     flex: 1.5,
-    cellRenderer: (params: ICellRendererParams) => RowState('duty', params),
+    cellRenderer: (params: ICellRendererParams) => RowState('annual', params),
   },
 ];

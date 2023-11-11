@@ -152,6 +152,10 @@ const Container = styled.div`
     }
     margin: 0;
   }
+  .ag-cell-focus {
+    outline: none;
+    border: none !important;
+  }
 `;
 
 const ButtonWrap = styled.div`

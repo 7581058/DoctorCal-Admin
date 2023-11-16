@@ -3,17 +3,15 @@ import { Eveluation, LoginBody, PagesBody, dutyRegistBody } from '@/lib/types/in
 
 const { VITE_BASE_URL } = import.meta.env;
 
-const host = window.location.hostname === 'localhost' ? VITE_BASE_URL : 'api';
-
 const instance = axios.create({
-  baseURL: host,
+  baseURL: VITE_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
 const authInstance = axios.create({
-  baseURL: host,
+  baseURL: VITE_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     Authorization: `${localStorage.getItem('authToken')}`,
@@ -129,5 +127,17 @@ export const getAnnual = async (date: string) => {
 // 날짜별 당직 인원 조회
 export const getDuty = async (date: string) => {
   const res = await authInstance.get(`/schedule/date?chooseDate=${date}&category=DUTY`);
+  return res.data;
+};
+
+// 근무관리 대시보드
+export const getAttendanceDashboard = async () => {
+  const res = await authInstance.get(`/admin/work/dashboard`);
+  return res.data;
+};
+
+// 근무관리 사용자 목록
+export const getAttendanceUsers = async () => {
+  const res = await authInstance.get(`/admin/work`);
   return res.data;
 };

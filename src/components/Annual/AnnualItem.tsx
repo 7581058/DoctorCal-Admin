@@ -1,8 +1,8 @@
-import { styled } from 'styled-components';
 import { AnnualBody } from '@/lib/types';
-import RejectBtn from '../Buttons/RejectBtn';
-import ApplyBtn from '../Buttons/ApplyBtn';
 import { getCategory, getEvaluation } from '@/utils/decode';
+import RejectBtn from '@/components/Buttons/RejectBtn';
+import ApplyBtn from '@/components/Buttons/ApplyBtn';
+import styled from 'styled-components';
 
 const AnnualItem = ({ requests, currentPage }: { requests: AnnualBody[]; currentPage: number }) => {
   const startIndex = (currentPage - 1) * 10;

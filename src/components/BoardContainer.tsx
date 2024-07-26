@@ -1,5 +1,4 @@
-import { styled } from 'styled-components';
-import { ReactNode } from 'react';
+import styled from 'styled-components';
 
 const BoardContainer = ({
   title,
@@ -8,7 +7,7 @@ const BoardContainer = ({
 }: {
   title: string;
   headers: { name: string; width: number }[];
-  children: ReactNode;
+  children: React.ReactNode;
 }) => {
   return (
     <Container>

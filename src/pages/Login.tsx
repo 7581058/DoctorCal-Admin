@@ -1,20 +1,28 @@
-import { useNavigate } from 'react-router-dom';
-import { styled } from 'styled-components';
-import Btn from '@/components/Buttons/Btn';
-import SignUpValidation from '@/lib/Validation/validation';
-import { useForm } from 'react-hook-form';
-import { FiAlertCircle } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
-import { getMyPage, login } from '@/lib/api';
-import { LoginBody } from '@/lib/types';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
-import { AdminState } from '@/states/stateAdmin';
+import { FiAlertCircle } from 'react-icons/fi';
+import { getMyPage, login } from '@/lib/api';
+import { AlertState, LoginBody } from '@/lib/types';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { LOGIN_TEXTS } from '@/constants/login';
+import { BUTTON_TEXTS } from '@/constants/buttons';
+import { stateAdmin } from '@/states/stateAdmin';
+import { stateAlert } from '@/states/stateAlert';
+import Btn from '@/components/Buttons/Btn';
+import Alert from '@/components/Alert';
+import SignUpValidation from '@/lib/Validation/validation';
 import backgroundLogo from '/backgroundlogo.png';
 import logowhithtext from '/logowithtext.png';
+import styled from 'styled-components';
 
 const Login = () => {
-  const setAdminData = useSetRecoilState(AdminState);
+  const setAdminData = useSetRecoilState(stateAdmin);
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   const [loginError, setLoginError] = useState('');
+
   const navigate = useNavigate();
 
   const saveTokenToLocalstorage = (token: string) => {
@@ -27,12 +35,17 @@ const Login = () => {
   }, []);
 
   const getAdminInfo = async () => {
-    const res = await getMyPage();
     try {
-      console.log(res);
-      setAdminData(res.item);
-    } catch {
-      console.log('관리자 정보 조회 실패');
+      const res = await getMyPage();
+      if (res.success) {
+        setAdminData(res.item);
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `마이페이지 조회 실패\n${error}`,
+        type: 'error',
+      });
     }
   };
 
@@ -54,40 +67,37 @@ const Login = () => {
       });
     } else {
       try {
-        const response = await login({ email: data.email, password: data.password });
-        console.log(response);
-        if (response && response.data.success) {
+        const res = await login({ email: data.email, password: data.password });
+        if (res && res.data.success) {
           setLoginError('');
-          const token = response.headers.authorization;
+          const token = res.headers.authorization;
           saveTokenToLocalstorage(token);
           await getAdminInfo();
           navigate('/duty');
         } else {
-          setLoginError('로그인에 실패하셨습니다.');
-          console.error('로그인 실패');
+          setLoginError(MESSAGE_TEXTS.loginError);
         }
       } catch (error) {
-        setLoginError('로그인에 실패하셨습니다.');
-        console.error('로그인 실패', error);
+        setLoginError(MESSAGE_TEXTS.loginError);
       }
     }
   };
 
   return (
     <Container>
+      <Alert />
       <ImgContainer1 />
       <Textwrap>
-        <span>대학병원 의사들을 위한</span>
-        <span>쉽고 빠른 연차 당직 관리 서비스</span>
+        <span>{LOGIN_TEXTS.title}</span>
       </Textwrap>
       <ImgContainer2 />
 
       <Wrap>
-        <h1>어서오세요!</h1>
+        <h1>{LOGIN_TEXTS.hello}</h1>
         <FormWrap onSubmit={handleSubmit(onSubmit)} name="loginForm">
           <InputContainer>
-            <div className="inputTitle">email</div>
-            <input type="email" placeholder="이메일을 입력해주세요." {...register('email')} />
+            <div className="inputTitle">{LOGIN_TEXTS.emailInputTitle}</div>
+            <input type="email" placeholder={LOGIN_TEXTS.emailPlacehoder} {...register('email')} />
             {errors.email && (
               <InfoBox>
                 <FiAlertCircle />
@@ -96,8 +106,8 @@ const Login = () => {
             )}
           </InputContainer>
           <InputContainer>
-            <div className="inputTitle">password</div>
-            <input type="password" placeholder="비밀번호를 입력해주세요." {...register('password')} />
+            <div className="inputTitle">{LOGIN_TEXTS.passwordInputTitle}</div>
+            <input type="password" placeholder={LOGIN_TEXTS.passwordPlacehoder} {...register('password')} />
             {errors.password && (
               <InfoBox>
                 <FiAlertCircle />
@@ -112,7 +122,7 @@ const Login = () => {
             )}
           </InputContainer>
           <InputContainer>
-            <Btn content={'로그인'} />
+            <Btn content={BUTTON_TEXTS.login} />
           </InputContainer>
         </FormWrap>
       </Wrap>

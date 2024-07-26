@@ -1,17 +1,32 @@
-import { styled } from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 import { userRetire } from '@/lib/api';
+import { Users, AlertState } from '@/lib/types';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { USER_SELECT_OPTION } from '@/constants/select';
 import { getLevel, getAuth, getPhone } from '@/utils/decode';
-import { Users } from '@/lib/types';
+import { stateAlert } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
+import styled from 'styled-components';
 
 const UsersItem = ({ userList, currentPage }: { userList: Users[]; currentPage: number }) => {
-  const handleChangeState = async (dept: string, name: string, userid: number) => {
-    const data = await userRetire(userid);
-    if (data.response && data.response.status === 400) {
-      alert('재직 중인 사용자만 변경 가능합니다.');
-      window.location.reload();
-    } else {
-      alert(`${dept} ${name} 재직 상태 변경 완료`);
-      window.location.reload();
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
+  const handleChangeState = async (dept: string, name: string, userId: number) => {
+    try {
+      const data = await userRetire(userId);
+      if (data.response && data.response.status === 400) {
+        alert(MESSAGE_TEXTS.userChangeError);
+        window.location.reload();
+      } else {
+        alert(`${dept} ${name} ${MESSAGE_TEXTS.userChangeSuccess}`);
+        window.location.reload();
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `사용자 재직 상태 변경 실패\n${error}`,
+        type: 'error',
+      });
     }
   };
 
@@ -19,6 +34,7 @@ const UsersItem = ({ userList, currentPage }: { userList: Users[]; currentPage: 
 
   return (
     <Container>
+      <Alert />
       {userList.map((item, index) => (
         <UserItem key={item.id}>
           <span className="index">{startIndex + index + 1}</span>
@@ -29,8 +45,9 @@ const UsersItem = ({ userList, currentPage }: { userList: Users[]; currentPage: 
           <span className="auth">{getAuth(item.auth)}</span>
           <div className="state">
             <select value={item.status} onChange={() => handleChangeState(item.deptName, item.username, item.id)}>
-              <option value="APPROVED">재직중</option>
-              <option value="RETIRED">퇴사</option>
+              {USER_SELECT_OPTION.map(option => (
+                <option value={option.value}>{option.text}</option>
+              ))}
             </select>
           </div>
         </UserItem>

@@ -1,30 +1,46 @@
+import { useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
 import { getAnnual } from '@/lib/api';
-import { styled } from 'styled-components';
+import { AlertState, AnnualData } from '@/lib/types';
+import { TABLE_HEADER_TEXTS } from '@/constants/table';
+import { MODAL_TEXTS } from '@/constants/modal';
 import { getLevel, getPhone } from '@/utils/decode';
-import { AnnualData } from '@/lib/types';
+import { stateAlert } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
+import styled from 'styled-components';
 
 const AnnualModal = ({ date }: { date: string }) => {
   const [annual, setAnnual] = useState<AnnualData[]>([]);
 
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   useEffect(() => {
     (async () => {
-      const data = await getAnnual(date);
-      setAnnual(data.item);
+      try {
+        const data = await getAnnual(date);
+        setAnnual(data.item);
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `휴가 인원 조회 실패\n${error}`,
+          type: 'error',
+        });
+      }
     })();
-  }, []);
+  }, [date]);
 
   return (
     <Container>
-      <Title>금일 휴가 인원</Title>
+      <Alert />
+      <Title>{MODAL_TEXTS.annualModalTitle}</Title>
       <DateWrap>{date}</DateWrap>
       <TableContainer>
         <DataWrap className="header">
-          <div>No.</div>
-          <div>이름</div>
-          <div>파트</div>
-          <div>직급</div>
-          <div className="phone">연락처</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderIndex}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderName}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderDept}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderLevel}</div>
+          <div className="phone">{TABLE_HEADER_TEXTS.tableHeaderPhone}</div>
         </DataWrap>
         <Users>
           {annual.map((item, index) => (

@@ -1,99 +1,57 @@
-import BoardContainer from '@/components/BoardContainer';
-import DutyRequestsItem from '@/components/duty/DutyRequestsItem';
-import Pagenation from '@/components/Pagenation';
 import { useEffect, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { duty } from '@/lib/api';
-import styled from 'styled-components';
+import { AlertState } from '@/lib/types';
+import { SORT_SELECT_OPTION } from '@/constants/select';
+import { DUTYS_COLUMN } from '@/constants/duty';
+import { PAGE_TITLE_TEXTS } from '@/constants/pageTitle';
+import { stateAlert } from '@/states/stateAlert';
+import { useChangeValue } from '@/hooks/useChangeValue';
+import GridTable from '@/components/Table/GridTable';
+import CustomSelect from '@/components/CustomSelect';
+import Alert from '@/components/Alert';
 import Loading from '@/components/Loading';
-
-const header = [
-  { name: 'No', width: 0.5 },
-  { name: '이름', width: 1 },
-  { name: '직급', width: 1 },
-  { name: '유형', width: 1 },
-  { name: '신청 날짜', width: 1.5 },
-  { name: '희망 날짜', width: 1.5 },
-  { name: '상태', width: 1.5 },
-];
+import styled from 'styled-components';
 
 const Duty = () => {
   const [requests, setRequests] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [sort, setSort] = useState('desc');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 당직 리스트 호출
-  const getDutyList = async (page: number) => {
-    setIsLoading(true);
-    await duty({ page: page })
-      .then(res => {
-        setRequests(res.item);
-        setTotalPages(res.totalPages);
-        setIsLoading(false);
-      })
-      .catch(error => console.error(error));
-  };
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
 
-  // 당직 리스트 호출 (정렬)
-  const getSortedDutyList = async (page: number, selectedSort: string) => {
-    setIsLoading(true);
-    const data = await duty({ page: page, sort: `createdAt,${selectedSort}` });
-    setRequests(data.item);
-    setTotalPages(data.totalPages);
-    setIsLoading(false);
-  };
+  const { value, handleValueChange } = useChangeValue('desc');
 
-  // 정렬 핸들러
-  const handleChangeSort = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setIsLoading(true);
-    const selectedSort = event.target.value;
-    localStorage.setItem('requestsSort', selectedSort);
-    setSort(selectedSort);
-    getSortedDutyList(0, selectedSort);
-    setIsLoading(false);
-  };
-
-  // 페이지네이션 핸들러
-  const handlePageChange = (pageNumber: number) => {
-    setIsLoading(true);
-    if (pageNumber === 0) {
-      getDutyList(pageNumber);
-      setCurrentPage(pageNumber);
-    } else {
-      setCurrentPage(pageNumber);
-      getDutyList(pageNumber - 1);
+  const getDutyList = async (page: number, selectedSort: string) => {
+    try {
+      setIsLoading(true);
+      const res = await duty({ page: page, sort: `createdAt,${selectedSort}` });
+      setRequests(res.item);
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `당직 결재 리스트 조회 실패\n${error}`,
+        type: 'error',
+      });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
-    const savedSort = localStorage.getItem('requestsSort');
-    if (savedSort) {
-      setSort(savedSort);
-    }
-    getSortedDutyList(0, savedSort || sort);
-  }, []);
+    getDutyList(0, value);
+  }, [value]);
 
   return (
     <Container>
+      <Alert />
       {isLoading && <Loading />}
-      <Select value={sort} onChange={handleChangeSort}>
-        <option value="desc">최신순</option>
-        <option value="asc">오래된순</option>
-      </Select>
-      <BoardContainer title="당직 변경 관리" headers={header}>
-        {requests.length > 0 ? (
-          <DutyRequestsItem requests={requests} currentPage={currentPage} />
-        ) : (
-          <Empty>요청 목록이 존재하지 않습니다.</Empty>
-        )}
-      </BoardContainer>
-      {requests.length > 0 ? (
-        <Pagenation totalPage={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
-      ) : (
-        <EmptyBottom />
-      )}
+      <TitleContainer>
+        <PageTitle>{PAGE_TITLE_TEXTS.dutyTitle}</PageTitle>
+        <SubTitle>
+          <CustomSelect options={SORT_SELECT_OPTION} value={value} onChange={handleValueChange} />
+        </SubTitle>
+      </TitleContainer>
+      <GridTable rowData={requests} columnsData={DUTYS_COLUMN} />
     </Container>
   );
 };
@@ -108,28 +66,29 @@ const Container = styled.div`
   height: 100%;
   padding: 20px 80px 60px 80px;
   box-sizing: border-box;
+  select {
+    position: absolute;
+    right: 80px;
+    width: 100px;
+    height: 30px;
+    margin-top: -5px;
+  }
 `;
 
-const Select = styled.select`
-  position: absolute;
-  right: 80px;
-  width: 100px;
-  height: 30px;
-  margin-top: -5px;
+const PageTitle = styled.span`
+  font-size: 1.125rem;
+  font-weight: 700;
 `;
 
-const Empty = styled.div`
-  width: 100%;
-  height: 100%;
+const TitleContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2rem;
-  color: ${props => props.theme.lightGray};
-  font-weight: 500;
+  justify-content: space-between;
 `;
 
-const EmptyBottom = styled.div`
-  width: 100%;
-  height: 20px;
+const SubTitle = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: ${props => props.theme.primary};
 `;

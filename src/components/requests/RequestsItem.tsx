@@ -1,16 +1,34 @@
-import { styled } from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 import { registerApprove } from '@/lib/api';
+import { AlertState, Request } from '@/lib/types';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { BUTTON_TEXTS } from '@/constants/buttons';
 import { getLevel, getPhone } from '@/utils/decode';
-import { Request } from '@/lib/types';
+import { stateAlert } from '@/states/stateAlert';
+import styled from 'styled-components';
 
 const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentPage: number }) => {
-  const approve = async (userid: number) => {
-    await registerApprove(userid);
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
+  const approve = async (userId: number) => {
+    try {
+      await registerApprove(userId);
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `회원가입 요청 승인 실패\n${error}`,
+        type: 'error',
+      });
+    }
   };
 
   const handleClickApprove = (name: string, dept: string, id: number) => {
     approve(id);
-    alert(`${dept} ${name} 가입 승인 완료`);
+    setAlert({
+      isOpen: true,
+      content: `${dept} ${name} ${MESSAGE_TEXTS.requestSuccess}`,
+      type: 'error',
+    });
     window.location.reload();
   };
 
@@ -27,7 +45,7 @@ const RequestsItem = ({ requests, currentPage }: { requests: Request[]; currentP
           <span className="phone">{getPhone(item.phone)}</span>
           <span className="button">
             <ApproveButton onClick={() => handleClickApprove(item.username, item.deptName, item.id)}>
-              승인
+              {BUTTON_TEXTS.approve}
             </ApproveButton>
           </span>
         </RequestItem>

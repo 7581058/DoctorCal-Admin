@@ -1,53 +1,53 @@
-import {
-  BsPersonFillGear,
-  BsCalendarPlus,
-  BsCalendarWeek,
-  BsFillPersonPlusFill,
-  BsCalendarHeart,
-} from 'react-icons/bs';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { styled } from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 import { logout } from '@/lib/api';
+import { AlertState } from '@/lib/types';
+import { BUTTON_TEXTS } from '@/constants/buttons';
+import { SIDE_BAR_OPTIONS, SIDE_BAR_TEXT } from '@/constants/sideBar';
+import { stateAlert } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
+import styled from 'styled-components';
 
 const SideBar = () => {
   const navigate = useNavigate();
+
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   const handleClickLogout = async () => {
-    await logout();
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('recoil-persist');
-    navigate('/');
+    try {
+      const res = await logout();
+      if (res.success) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('recoil-persist');
+        navigate('/');
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `로그아웃 실패\n${error}`,
+        type: 'error',
+      });
+    }
   };
 
   return (
     <Container>
+      <Alert />
       <Logo to="/duty" />
       <Menu>
-        <MenuItem to="/duty">
-          <BsCalendarWeek />
-          <span>당직 변경 관리</span>
-        </MenuItem>
-        <MenuItem to="/register">
-          <BsCalendarPlus />
-          <span>당직 일정 추가</span>
-        </MenuItem>
-        <MenuItem to="/annual">
-          <BsCalendarHeart />
-          <span>연차 신청 관리</span>
-        </MenuItem>
-        <MenuItem to="/users">
-          <BsPersonFillGear />
-          <span>사용자 관리</span>
-        </MenuItem>
-        <MenuItem to="/requests">
-          <BsFillPersonPlusFill />
-          <span>회원 가입 요청</span>
-        </MenuItem>
+        {SIDE_BAR_OPTIONS.map((item, index) => (
+          <MenuItem to={item.to} key={index}>
+            <item.icon />
+            <span>{item.text}</span>
+          </MenuItem>
+        ))}
       </Menu>
       <AdminLogo>
-        ADMIN<span>관리자</span>
+        {SIDE_BAR_TEXT.logoFront}
+        <span>{SIDE_BAR_TEXT.logoBack}</span>
       </AdminLogo>
-      <LogoutBtn onClick={handleClickLogout}>로그아웃</LogoutBtn>
-      <Mark>©Dr.Cal</Mark>
+      <LogoutBtn onClick={handleClickLogout}>{BUTTON_TEXTS.logout}</LogoutBtn>
+      <Mark>{SIDE_BAR_TEXT.mark}</Mark>
     </Container>
   );
 };

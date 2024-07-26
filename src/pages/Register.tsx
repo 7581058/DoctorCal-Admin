@@ -1,14 +1,20 @@
-import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { dutyRegist, hospitalDoctorList } from '@/lib/api';
-import { DoctorList } from '@/lib/types';
-import { hname, getLevel } from '@/utils/decode';
-import Btn from '@/components/Buttons/Btn';
 import { FiAlertCircle } from 'react-icons/fi';
-import { useRecoilValue } from 'recoil';
-import { AdminState } from '@/states/stateAdmin';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { dutyRegist, hospitalDoctorList } from '@/lib/api';
+import { AlertState, DoctorList } from '@/lib/types';
+import { MESSAGE_TEXTS } from '@/constants/message';
+import { BUTTON_TEXTS } from '@/constants/buttons';
+import { REGISTER_TEXTS } from '@/constants/register';
+import { stateAdmin } from '@/states/stateAdmin';
+import { stateAlert } from '@/states/stateAlert';
+import { hospitalDecode, getLevel } from '@/utils/decode';
 import Calendar from '@/components/calendar/Calendar';
+import Loading from '@/components/Loading';
+import Alert from '@/components/Alert';
+import Btn from '@/components/Buttons/Btn';
+import styled from 'styled-components';
 
 interface RegisterFormBody {
   hospitalId: number;
@@ -18,17 +24,28 @@ interface RegisterFormBody {
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState('');
-  const adminData = useRecoilValue(AdminState);
   const [doctorList, setDoctorList] = useState<DoctorList[]>();
+  const [isLoading, setIsLoading] = useState(false);
+
   const { register, handleSubmit } = useForm<RegisterFormBody>();
+
+  const adminData = useRecoilValue(stateAdmin);
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
 
   // 의사 목록 호출
   const hospitalDoctors = async () => {
     try {
+      setIsLoading(true);
       const res = await hospitalDoctorList();
       setDoctorList(res.item);
     } catch (error) {
-      console.error('Error while fetching doctor list:', error);
+      setAlert({
+        isOpen: true,
+        content: `병원 의사 리스트 불러오기 실패\n${error}`,
+        type: 'error',
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -44,23 +61,25 @@ const Register = () => {
       await dutyRegist(data.userId, body);
       location.reload();
     } catch (error) {
-      setErrorMessage('당직 일정 등록 실패');
+      setErrorMessage(MESSAGE_TEXTS.dutyAddError);
     }
   };
 
   return (
     <Container>
+      <Alert />
+      {isLoading && <Loading />}
       <CalendarContainer>
         <Calendar />
       </CalendarContainer>
       <RegisterWrap onSubmit={handleSubmit(onSubmit)}>
         <RegisterForm>
           <Label>
-            <span>병원 이름</span>
-            <input value={hname[adminData.hospitalId]} readOnly {...register('hospitalId')} />
+            <span>{REGISTER_TEXTS.hospitalName}</span>
+            <input value={hospitalDecode[adminData.hospitalId].hospital} readOnly {...register('hospitalId')} />
           </Label>
           <Label>
-            <span>당직 대상 선택</span>
+            <span>{REGISTER_TEXTS.selectDutyTarget}</span>
             <DoctorListContainer>
               {doctorList?.map(doctor => (
                 <label key={doctor.userId}>
@@ -76,7 +95,7 @@ const Register = () => {
             </DoctorListContainer>
           </Label>
           <Label>
-            날짜 지정
+            {REGISTER_TEXTS.selectDate}
             <input type="date" {...register('chooseDate')} />
           </Label>
           <div>
@@ -87,7 +106,7 @@ const Register = () => {
               </InfoBox>
             )}
           </div>
-          <Btn content={'등록하기'}></Btn>
+          <Btn content={BUTTON_TEXTS.register}></Btn>
         </RegisterForm>
       </RegisterWrap>
     </Container>

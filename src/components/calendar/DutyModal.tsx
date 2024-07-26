@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { getDuty, deleteDuty } from '@/lib/api';
-import { styled } from 'styled-components';
+import { AlertState, DutyData } from '@/lib/types';
+import { MODAL_TEXTS } from '@/constants/modal';
+import { TABLE_HEADER_TEXTS } from '@/constants/table';
+import { BUTTON_TEXTS } from '@/constants/buttons';
 import { getLevel, getPhone } from '@/utils/decode';
-import { DutyData } from '@/lib/types';
+import { stateAlert } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
+import styled from 'styled-components';
 
 const DutyDataInitial = {
   deptName: '',
@@ -18,30 +24,51 @@ const DutyDataInitial = {
 const DutyModal = ({ date, onClose }: { date: string; onClose: () => void }) => {
   const [duty, setDuty] = useState<DutyData>(DutyDataInitial);
 
+  const setAlert = useSetRecoilState<AlertState>(stateAlert);
+
   useEffect(() => {
     (async () => {
-      const data = await getDuty(date);
-      setDuty(data.item);
+      try {
+        const data = await getDuty(date);
+        setDuty(data.item);
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `당직 인원 조회 실패\n${error}`,
+          type: 'error',
+        });
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClickDelete = async () => {
-    await deleteDuty(duty.id);
-    onClose();
-    window.location.reload();
+    try {
+      const res = await deleteDuty(duty.id);
+      if (res.success) {
+        onClose();
+        window.location.reload();
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `당직 삭제 실패\n${error}`,
+        type: 'error',
+      });
+    }
   };
 
   return (
     <Container>
-      <Title>금일 당직 인원</Title>
+      <Alert />
+      <Title>{MODAL_TEXTS.dutyModalTitle}</Title>
       <DateWrap>{date}</DateWrap>
       <TableContainer>
         <DataWrap>
-          <div>이름</div>
-          <div>파트</div>
-          <div>직급</div>
-          <div>연락처</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderName}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderDept}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderLevel}</div>
+          <div>{TABLE_HEADER_TEXTS.tableHeaderPhone}</div>
         </DataWrap>
         <DataWrap>
           <div>{duty.username}</div>
@@ -49,7 +76,7 @@ const DutyModal = ({ date, onClose }: { date: string; onClose: () => void }) => 
           <div>{getLevel(duty.level)}</div>
           <div>{getPhone(duty.phone)}</div>
         </DataWrap>
-        <DeleteButton onClick={handleClickDelete}>당직 삭제</DeleteButton>
+        <DeleteButton onClick={handleClickDelete}>{BUTTON_TEXTS.dutyDelete}</DeleteButton>
       </TableContainer>
     </Container>
   );

@@ -1,7 +1,7 @@
-import { styled } from 'styled-components';
+import { GrClose } from 'react-icons/gr';
 import AnnualModal from '@/components/calendar/AnnualModal';
 import DutyModal from '@/components/calendar/DutyModal';
-import { GrClose } from 'react-icons/gr';
+import styled from 'styled-components';
 
 const CheckModal = ({
   isOpen,
